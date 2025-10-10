@@ -6,6 +6,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { BackendHeaderComponent } from './backend-header/backend-header.component';
 import { BackendFooterComponent } from './backend-footer/backend-footer.component';
+import { SideNavComponent } from './side-nav/side-nav.component';
+import { SharedService } from './shared.service';
 
 
 @NgModule({
@@ -13,7 +15,8 @@ import { BackendFooterComponent } from './backend-footer/backend-footer.componen
     HeaderComponent,
     FooterComponent,
     BackendHeaderComponent,
-    BackendFooterComponent
+    BackendFooterComponent,
+    SideNavComponent
   ],
   exports: [
     HeaderComponent,
@@ -24,6 +27,7 @@ import { BackendFooterComponent } from './backend-footer/backend-footer.componen
   imports: [
     CommonModule,
     SharedRoutingModule
-  ]
+  ],
+  providers: [SharedService]
 })
 export class SharedModule { }
