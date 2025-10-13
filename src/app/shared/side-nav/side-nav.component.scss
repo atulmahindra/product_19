@@ -56,9 +56,12 @@
 /* Remove the divider line under expansion headers */
 ::ng-deep .mat-expansion-panel-header {
   border-bottom: none !important;
-  padding: 0.5rem 1rem;
+  padding-right: 16px !important;padding-left: 16px !important;
+  height: 45px !important;
 }
-
+::ng-deep .mat-expansion-panel-body {
+  padding-bottom: 0rem !important; /* adjust as needed */
+}
 ::ng-deep .mat-expansion-panel-content {
   background: transparent !important;
 }
@@ -86,4 +89,40 @@ h3[mat-subheader] {
   font-weight: 600;
   color: #6c757d;
 }
+a[mat-list-item],
+.mat-expansion-panel-header .mat-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* spacing between icon and text */
+  height: 45px;
+}
+
+/* Make sure icons have consistent size and alignment */
+a[mat-list-item] mat-icon,
+.mat-expansion-panel-header mat-icon {
+  font-size: 20px;
+  vertical-align: middle;
+  color: inherit;
+}
+
+/* Ensure text doesn’t stretch awkwardly */
+.mat-panel-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* Keep badges aligned on the right */
+a[mat-list-item] .badge,
+.mat-expansion-panel-header .badge {
+  margin-left: auto;
+}
+::ng-deep .mat-list-item-content {
+  padding-left: 0.75rem !important;
+}
+a[mat-list-item]:hover {
+  background-color: transparent;
+  border-radius: 0 !important;
+}
+
 /* end drop*/
