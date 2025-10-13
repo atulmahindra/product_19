@@ -1,5 +1,16 @@
-<app-backend-header></app-backend-header>
-<div class="backend-wrap">
+<div fxLayout="row" fxFill>
+  <!-- Side Navigation -->
+ <app-side-nav ></app-side-nav>
+
+  <!-- Right Content Area -->
+  <main fxFlex fxLayout="column" class="main-content">
+    <!-- Header -->
+    <app-header ></app-header>
+
+    <!-- Center Content -->
     <router-outlet></router-outlet>
+
+    <!-- Footer -->
+   <app-footer></app-footer>
+  </main>
 </div>
-<app-backend-footer></app-backend-footer>
