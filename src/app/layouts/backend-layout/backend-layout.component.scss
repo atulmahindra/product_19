@@ -1,0 +1,26 @@
+.main-content {
+  width: 100%;
+}
+
+.fixed-header {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white; /* or match your theme */
+}
+
+.fixed-footer {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+  background: white;
+}
+
+.content-area {
+  flex: 1 1 auto;
+  overflow-y: auto; /* Scroll only inside this area */
+  padding: 1rem; /* Optional */
+  background: #f5f5f5; /* Optional */
+}

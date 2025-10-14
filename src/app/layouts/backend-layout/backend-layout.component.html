@@ -3,14 +3,21 @@
  <app-side-nav ></app-side-nav>
 
   <!-- Right Content Area -->
-  <main fxFlex fxLayout="column" class="main-content">
-    <!-- Header -->
+  <main  fxLayout="column" class="main-content">
+  <!-- Fixed Header -->
+  <header class="fixed-header">
     <app-backend-header></app-backend-header>
+  </header>
 
-    <!-- Center Content -->
+  <!-- Scrollable Center Content -->
+  <section class="content-area" fxFlex>
     <router-outlet></router-outlet>
+  </section>
 
-    <!-- Footer -->
-   <app-footer></app-footer>
-  </main>
+  <!-- Fixed Footer -->
+  <footer class="fixed-footer">
+    <app-footer></app-footer>
+  </footer>
+</main>
+
 </div>
