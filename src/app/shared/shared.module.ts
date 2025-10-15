@@ -16,8 +16,10 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 
-import {MatButtonModule} from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+
 
 
 
@@ -35,8 +37,8 @@ import {MatButtonModule} from '@angular/material/button';
     BackendHeaderComponent,
     FlexLayoutModule,
     BackendFooterComponent,
-    MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
     SideNavComponent
   ],
   imports: [
@@ -45,11 +47,14 @@ import {MatButtonModule} from '@angular/material/button';
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatIconModule,
-    MatButtonModule,
     MatExpansionModule,
     SharedRoutingModule
   ],
-  providers: [SharedService]
+  providers: [SharedService,
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
+  ]
 })
 export class SharedModule { }

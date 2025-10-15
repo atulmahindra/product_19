@@ -134,7 +134,7 @@
 .dark1 {
   @include mat.theme-overrides(
     (
-      primary: #d9b9ff,
+      primary: #821E24,
       on-primary: #3f1e68,
       primary-container: #573680,
       on-primary-container: #eedcff,
@@ -192,3 +192,6 @@
     )
   );
 }
+
+
+
