@@ -1,29 +1,36 @@
 @use "@angular/material" as mat;
-@use "./styles/_theme-colors.scss" as theme-colors;
+// @use "./styles/_theme-colors.scss" as theme-colors;
 
-html {
-  @include mat.theme(
-    (
-      color: (
-        theme-type: light,
-        primary: theme-colors.$primary-palette,
-        tertiary: theme-colors.$tertiary-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-}
+// html {
+//   @include mat.theme(
+//     (
+//       color: (
+//         theme-type: light,
+//         primary: theme-colors.$primary-palette,
+//         tertiary: theme-colors.$tertiary-palette,
+//       ),
+//       typography: Roboto,
+//       density: 0,
+//     )
+//   );
+// }
 
 html,
 body {
   height: 100%;
+  
 }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 body {
-  background: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: #D10013;
+  /* vertical gradient: top (#D10013) to bottom (#000000) */
+  background-image: linear-gradient(to bottom, #D10013 0%, #000000 100%);
+  /* keep it fixed so it doesn't move with content (optional) */
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
 }

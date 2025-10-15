@@ -1,5 +1,6 @@
 .layout-container {
   height: 100vh;
+  background: var(--mat-sys-surface-dim);
 }
 
 .sidenav {
@@ -13,6 +14,27 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  .sidenav-menu {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+  /* Keep badges aligned on the right */
+a[mat-list-item] .badge,
+.mat-expansion-panel-header .badge {
+  margin-left: auto;
+}
+::ng-deep .mat-list-item-content {
+  padding-left: 0.75rem !important;
+}
+a[mat-list-item]:hover::before {
+  background-color: transparent; 
+  border-radius: 0 !important;
+}
+::ng-deep .mat-expansion-panel{
+  box-shadow: none !important;
+}
+}
+
 }
 
 .sidenav-header {
@@ -21,11 +43,7 @@
   z-index: 10;
 }
 
-.sidenav-menu {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: 1rem;
-}
+
 
 .sidenav-footer {
   position: sticky;
@@ -39,37 +57,7 @@
 
 
 /* start drop*/
-.nav-dropdown {
-  background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  border: none !important;
-}
 
-::ng-deep .mat-expansion-panel {
-  background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  border: none !important;
-}
-
-/* Remove the divider line under expansion headers */
-::ng-deep .mat-expansion-panel-header {
-  border-bottom: none !important;
-  padding-right: 16px !important;padding-left: 16px !important;
-  height: 45px !important;
-}
-::ng-deep .mat-expansion-panel-body {
-  padding-bottom: 0rem !important; /* adjust as needed */
-}
-::ng-deep .mat-expansion-panel-content {
-  background: transparent !important;
-}
-
-/* Optional: Remove hover background for minimalist style */
-::ng-deep .mat-expansion-panel-header:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
 
 /* Badge styling */
 .badge {
@@ -112,17 +100,6 @@ a[mat-list-item] mat-icon,
   align-items: center;
 }
 
-/* Keep badges aligned on the right */
-a[mat-list-item] .badge,
-.mat-expansion-panel-header .badge {
-  margin-left: auto;
-}
-::ng-deep .mat-list-item-content {
-  padding-left: 0.75rem !important;
-}
-a[mat-list-item]:hover {
-  background-color: transparent;
-  border-radius: 0 !important;
-}
+
 
 /* end drop*/
