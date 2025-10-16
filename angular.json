@@ -32,7 +32,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss", "src/styles/tokens.scss","src/styles/mixins.scss"
+              "src/styles.scss", "src/styles/tokens.scss"
             ],
             "scripts": []
           },
