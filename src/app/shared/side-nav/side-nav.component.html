@@ -1,4 +1,4 @@
-<mat-sidenav-container class="layout-container">
+<mat-sidenav-container class="layout-container" [class.width-70]="!isNarrow">
   <!-- Side Navigation -->
   <mat-sidenav mode="side" opened class="sidenav" [fixedInViewport]="true">
     
@@ -7,7 +7,7 @@
       <!-- <mat-toolbar  class="sidenav-header">
         <span>logo</span>
       </mat-toolbar> -->
-
+<!-- <button (click)="toggleWidth()">Toggle Width</button> -->
       <!-- Scrollable Menu -->
       <mat-nav-list class="sidenav-menu">
         <ng-container *ngFor="let menu of menus">

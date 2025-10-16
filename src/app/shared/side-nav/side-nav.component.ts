@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './side-nav.component.scss'
 })
 export class SideNavComponent {
+  isNarrow = false;
+
+ 
  menus:any = [
     {
       title: 'Projects',
@@ -142,4 +145,7 @@ export class SideNavComponent {
       type: 'simple'
     }
   ];
+   toggleWidth(): void {
+    this.isNarrow = !this.isNarrow;
+  }
 }

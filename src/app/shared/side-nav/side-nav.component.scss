@@ -2,10 +2,23 @@
 .layout-container {
   height: 100vh;
   background: var(--mat-sys-surface-dim);
+  // transition: width 1.3s ease;
+  &.width-70 {
+  width: 70px;
+  // transition: width 0.3s ease;
+  .sidenav{
+    width: 70px;
+    // transition: width 0.3s ease;
+  }
+  h4{
+    display: none;
+  }
+}
 }
 
 .sidenav {
   width: 260px;
+   transition: width 0.3s ease;
   display: flex;
   flex-direction: column;
   padding: 0;
