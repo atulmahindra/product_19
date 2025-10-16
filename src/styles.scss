@@ -2,34 +2,44 @@
 
 @font-face {
   font-family: 'Georama';
-  // src: url('./assets/font/Georama-VariableFont_wdth\,wght.ttf');
-  src: url(./assets/font/Georama_SemiExpanded-Regular.ttf);
+  src: url('./assets/font/Georama_SemiExpanded-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 @font-face {
-  font-family: 'Georama-bold';
-  // src: url('./assets/font/Georama-VariableFont_wdth\,wght.ttf');
-  src: url(./assets/font/Georama_SemiExpanded-Bold.ttf);
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
 }
 @font-face {
-  font-family: 'Georama-bold-s';
-  // src: url('./assets/font/Georama-VariableFont_wdth\,wght.ttf');
-  src: url(./assets/font/Georama_SemiExpanded-SemiBold.ttf);
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 @font-face {
-  font-family: 'Georama-Thin';
-  // src: url('./assets/font/Georama-VariableFont_wdth\,wght.ttf');
-  src: url(./assets/font/Georama_SemiExpanded-Thin.ttf);
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
 }
 @font-face {
-  font-family: 'Georama-Light';
-  // src: url('./assets/font/Georama-VariableFont_wdth\,wght.ttf');
-  src: url(./assets/font/Georama_SemiExpanded-Light.ttf);
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(./assets/font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+  src: url('./assets/font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2') format('woff2');
 }
 // @use "./styles/_theme-colors.scss" as theme-colors;
 
