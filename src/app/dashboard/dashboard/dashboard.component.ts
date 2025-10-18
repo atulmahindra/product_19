@@ -19,8 +19,8 @@ interface Node {
 
 const FLOW: Node[] = [
   { q: 'Do you want to create a new Angular project?', yes: 1, no: 2 },
-  { q: 'Do you want to add Angular Material foDo you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?r the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?Do you want to add Angular Material for the UI?', yes: 3, no: 4 },
-  { q: 'Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?Do you have an existing Angular project open?', yes: 1, no: 5 },
+  { q: 'selcted yes', yes: 3, no: 4 },
+  { q: 'selected no', yes: 3, no: 6 },
   { q: '', end: 'Great! Run: ng add @angular/material' },
   { q: '', end: 'No problem. You can style later with plain CSS.' },
   { q: '', end: 'Create one with: ng new my-app --standalone' },
@@ -40,7 +40,7 @@ title = 'yesno-bot';
   messages = signal<Message[]>([]);
   step = signal<number>(0);
   finished = signal<boolean>(false);
-
+  
   currentNode = computed(() => FLOW[this.step()]);
 
   constructor() {
@@ -53,10 +53,11 @@ title = 'yesno-bot';
 
   currentPrompt(): string {
     const node = this.currentNode();
+    console.log('Current node:', node);
     return node.end ? node.end : (node.q ?? '');
   }
 
-  onAnswer(choice: 'Yes' | 'No') {
+  onAnswer(choice: any) {
     console.log('User choice:', choice);
     if (this.finished()) return;
 
@@ -73,7 +74,7 @@ title = 'yesno-bot';
 
     // move to next node by choice
     const nextIndex = choice === 'Yes' ? node.yes : node.no;
-
+console.log('Next node index:', nextIndex);
     if (typeof nextIndex === 'number') {
       this.step.set(nextIndex);
       const nextNode = FLOW[nextIndex];
@@ -101,11 +102,12 @@ title = 'yesno-bot';
 
   private async pushBot(fullText: string) {
   // Step 1: Show typing placeholder
-  this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ts: Date.now() }]);
+  this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ts: Date.now(),options: ['Yes', 'No'] }]);
+  console.log("messages",this.messages())
   const index = this.messages().length - 1;
-
-  // Step 2: Animate dots for 1.5 seconds
-  const typingDuration = 1500;
+console.log('Bot message index:', index);
+  // Step 2: Animate dots for 1 seconds
+  const typingDuration = 1000;
   const dotInterval = 300;
   let elapsed = 0;
   while (elapsed < typingDuration) {
@@ -140,6 +142,7 @@ title = 'yesno-bot';
 
 
   private pushUser(text: string) {
+    console.log("selected option:", text);
     this.messages.update((m) => [...m, { from: 'user', text, ts: Date.now() }]);
     console.log('User message:', this.messages);
   }

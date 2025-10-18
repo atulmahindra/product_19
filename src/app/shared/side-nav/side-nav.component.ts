@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-side-nav',
@@ -7,145 +7,73 @@ import { Component } from '@angular/core';
   styleUrl: './side-nav.component.scss'
 })
 export class SideNavComponent {
-  isNarrow = false;
+  isCollapsed = false;
+  openDropdown: string | null = null;
+  dropdownHeights: { [key: string]: number } = {};
 
- 
- menus:any = [
+  // 🔹 Dynamic Menu Items
+  menuItems: any[] = [
     {
-      title: 'Projects',
-      type: 'header'
+      label: 'Dashboard',
+      icon: 'dashboard',
+      link: '/dashboard'
     },
     {
-      title: 'Dashboard',
-      icon: 'fa fa-tachometer-alt',
-      active: false,
-      type: 'dropdown',
-      // badge: {
-      //   text: 'New ',
-      //   class: 'badge-warning'
-      // },
-      submenus: [
-        {
-          title: 'Dashboard 1',
-          // badge: {
-          //   text: 'Pro ',
-          //   class: 'badge-success'
-          // }
-        },
-        {
-          title: 'Dashboard 2'
-        },
-        {
-          title: 'Dashboard 3'
-        }
+      label: 'Services',
+      icon: 'calendar_today',
+      children: [
+        { label: 'IT Consulting', link: '/services/it' },
+        { label: 'Cloud Solutions', link: '/services/cloud' },
+        { label: 'Mobile Apps', link: '/services/mobile' }
       ]
     },
     {
-      title: 'E-commerce',
-      icon: 'fa fa-shopping-cart',
-      active: false,
-      type: 'dropdown',
-      // badge: {
-      //   text: '3',
-      //   class: 'badge-danger'
-      // },
-      submenus: [
-        {
-          title: 'Products',
-        },
-        {
-          title: 'Orders'
-        },
-        {
-          title: 'Credit cart'
-        }
+      label: 'Bookmarks',
+      icon: 'star',
+      children: [
+        { label: 'Saved Tutorials', link: '/bookmarks/tutorials' },
+        { label: 'Favorite Blogs', link: '/bookmarks/blogs' },
+        { label: 'Resource Guides', link: '/bookmarks/guides' }
       ]
     },
     {
-      title: 'Components',
-      icon: 'far fa-gem',
-      active: false,
-      type: 'dropdown',
-      submenus: [
-        {
-          title: 'General',
-        },
-        {
-          title: 'Panels'
-        },
-        {
-          title: 'Tables'
-        },
-        {
-          title: 'Icons'
-        },
-        {
-          title: 'Forms'
-        }
-      ]
-    },
-    {
-      title: 'Charts',
-      icon: 'fa fa-chart-line',
-      active: false,
-      type: 'dropdown',
-      submenus: [
-        {
-          title: 'Pie chart',
-        },
-        {
-          title: 'Line chart'
-        },
-        {
-          title: 'Bar chart'
-        },
-        {
-          title: 'Histogram'
-        }
-      ]
-    },
-    {
-      title: 'Maps',
-      icon: 'fa fa-globe',
-      active: false,
-      type: 'dropdown',
-      submenus: [
-        {
-          title: 'Google maps',
-        },
-        {
-          title: 'Open street map'
-        }
-      ]
-    },
-    {
-      title: 'Chats',
-      type: 'header'
-    },
-    {
-      title: 'Documentation',
-      icon: 'fa fa-book',
-      active: false,
-      type: 'simple',
-      // badge: {
-      //   text: 'Beta',
-      //   class: 'badge-primary'
-      // },
-    },
-    {
-      title: 'Calendar',
-      icon: 'fa fa-calendar',
-      active: false,
-      type: 'simple'
-    },
-    {
-      title: 'Examples',
-      icon: 'fa fa-folder',
-      active: false,
-      type: 'simple'
+      label: 'Settings',
+      icon: 'settings',
+      link: '/settings'
     }
   ];
-   toggleWidth(): void {
-    this.isNarrow = !this.isNarrow;
+
+  secondaryMenu: any[] = [
+    { label: 'Support', icon: 'help', link: '/support' },
+    { label: 'Sign Out', icon: 'logout', link: '/logout' }
+  ];
+
+  constructor(private elRef: ElementRef) {}
+
+  ngAfterViewInit(): void {
+    // Measure dropdown heights after render
+    const menus = this.elRef.nativeElement.querySelectorAll('.dropdown-menu');
+    menus.forEach((menu: HTMLElement) => {
+      const parent = menu.closest('.dropdown-container');
+      const key = parent?.getAttribute('data-key') || '';
+      this.dropdownHeights[key] = menu.scrollHeight;
+    });
+
+    if (window.innerWidth <= 1024) this.isCollapsed = true;
+  }
+
+  toggleDropdown(key: string, event: Event): void {
+    event.preventDefault();
+    this.openDropdown = this.openDropdown === key ? null : key;
+  }
+
+  toggleSidebar(): void {
+    this.isCollapsed = !this.isCollapsed;
+    this.openDropdown = null;
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    if (window.innerWidth <= 1024) this.isCollapsed = true;
   }
 }

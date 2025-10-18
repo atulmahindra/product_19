@@ -1,67 +1,58 @@
-<mat-sidenav-container class="layout-container" [class.width-70]="!isNarrow">
-  <!-- Side Navigation -->
-  <mat-sidenav mode="side" opened class="sidenav" [fixedInViewport]="true">
-    
-    <div class="sidenav-content">
-      <!-- Fixed Header -->
-      <!-- <mat-toolbar  class="sidenav-header">
-        <span>logo</span>
-      </mat-toolbar> -->
-<!-- <button (click)="toggleWidth()">Toggle Width</button> -->
-      <!-- Scrollable Menu -->
-      <mat-nav-list class="sidenav-menu">
-        <ng-container *ngFor="let menu of menus">
-          <!-- Header -->
-          <ng-container *ngIf="menu.type === 'header'">
-            <h4 mat-subheader class="text-uppercase mt-2">{{ menu.title }}</h4>
-          </ng-container>
+<aside class="sidebar" [class.collapsed]="!isCollapsed">
+  <!-- Header -->
+  <header class="sidebar-header">
+    <!-- <a href="#" class="header-logo">
+      <img src="logo.png" alt="Logo" />
+    </a> -->
+    <button class="sidebar-toggler" (click)="toggleSidebar()">
+      <span class="material-symbols-rounded">chevron_left</span>
+    </button>
+  </header>
 
-          <!-- Dropdown menu -->
-          <ng-container *ngIf="menu.type === 'dropdown'">
-            <mat-expansion-panel class="nav-dropdown" [expanded]="menu.active">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <!-- <mat-icon fontSet="fa" [fontIcon]="menu.icon.replace('fa ', '')" class="me-2"></mat-icon> -->
-                   <mat-icon class="me-2">assignment_ind</mat-icon>
-                  {{ menu.title }}
-                </mat-panel-title>
-                <span *ngIf="menu.badge" class="badge" [ngClass]="menu.badge.class">
-                  {{ menu.badge.text }}
-                </span>
-              </mat-expansion-panel-header>
+  <nav class="sidebar-nav">
+    <!-- Primary Menu -->
+    <ul class="nav-list primary-nav">
+      <ng-container *ngFor="let item of menuItems">
+        <!-- Dropdown -->
+        <li class="nav-item dropdown-container" 
+            *ngIf="item.children; else simpleLink"
+            [class.open]="openDropdown === item.label"
+            [attr.data-key]="item.label">
 
-              <mat-action-list>
-                <a mat-list-item *ngFor="let sub of menu.submenus" href="#">
-                  {{ sub.title }}
-                  <span *ngIf="sub.badge" class="badge" [ngClass]="sub.badge.class">
-                    {{ sub.badge.text }}
-                  </span>
-                </a>
-              </mat-action-list>
-            </mat-expansion-panel>
-          </ng-container>
+          <a href="#" class="nav-link dropdown-toggle" (click)="toggleDropdown(item.label, $event)">
+            <span class="material-symbols-rounded">{{ item.icon }}</span>
+            <span class="nav-label">{{ item.label }}</span>
+            <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+          </a>
 
-          <!-- Simple link -->
-          <ng-container *ngIf="menu.type === 'simple'">
-            <a mat-list-item href="#">
-              <!-- <mat-icon fontSet="fa" [fontIcon]="menu.icon.replace('fa ', '')" class="me-2"></mat-icon> -->
-               <mat-icon class="me-2">bar_chart</mat-icon>
-              {{ menu.title }}
-              <span *ngIf="menu.badge" class="badge" [ngClass]="menu.badge.class">
-                {{ menu.badge.text }}
-              </span>
+          <ul class="dropdown-menu"
+              [style.height]="openDropdown === item.label ? dropdownHeights[item.label] + 'px' : '0'">
+            <li *ngFor="let sub of item.children" class="nav-item">
+              <a class="nav-link dropdown-link" [routerLink]="sub.link">{{ sub.label }}</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Simple Menu Item -->
+        <ng-template #simpleLink>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="item.link">
+              <span class="material-symbols-rounded">{{ item.icon }}</span>
+              <span class="nav-label">{{ item.label }}</span>
             </a>
-          </ng-container>
-        </ng-container>
-      </mat-nav-list>
+          </li>
+        </ng-template>
+      </ng-container>
+    </ul>
 
-    
-    </div>
-  <!-- Fixed Footer -->
-      <!-- <div class="sidenav-footer">
-        <small>© 2025  Info</small>
-      </div> -->
-  </mat-sidenav>
-
-
-</mat-sidenav-container>
+    <!-- Secondary Menu -->
+    <ul class="nav-list secondary-nav">
+      <li *ngFor="let item of secondaryMenu" class="nav-item">
+        <a class="nav-link" [routerLink]="item.link">
+          <span class="material-symbols-rounded">{{ item.icon }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
