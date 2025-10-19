@@ -71,9 +71,13 @@ body {
   /* vertical gradient: top (#D10013) to bottom (#000000) */
   background-image: linear-gradient(to bottom, #D10013 0%, #000000 100%);
   /* keep it fixed so it doesn't move with content (optional) */
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: 100vh;
+  // background-attachment: fixed;
+  // background-repeat: no-repeat;
+  // background-size: cover;
+  // min-height: 100vh;
+  //  background-image: url('./assets/images/main_bg.svg');
+  // background-repeat: no-repeat;
+  // background-size: cover; /* or contain / specific size */
+  // background-position: center;
 }
 

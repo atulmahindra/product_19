@@ -48,6 +48,7 @@ import { MatInputModule } from '@angular/material/input';
     MatToolbarModule,
     MatListModule,
     MatFormFieldModule,
+    FlexLayoutModule,
     MatInputModule,
     MatIconModule,
     MatExpansionModule,
