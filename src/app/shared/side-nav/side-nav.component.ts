@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-side-nav',
@@ -6,7 +6,7 @@ import { Component, ElementRef, HostListener } from '@angular/core';
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.scss'
 })
-export class SideNavComponent {
+export class SideNavComponent implements AfterViewInit {
   isCollapsed = false;
   openDropdown: string | null = null;
   dropdownHeights: { [key: string]: number } = {};
@@ -48,7 +48,7 @@ export class SideNavComponent {
     { label: 'Sign Out', icon: 'logout', link: '/logout' }
   ];
 
-  constructor(private elRef: ElementRef) {}
+  constructor(private elRef: ElementRef,private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     // Measure dropdown heights after render
@@ -60,6 +60,7 @@ export class SideNavComponent {
     });
 
     if (window.innerWidth <= 1024) this.isCollapsed = true;
+    
   }
 
   toggleDropdown(key: string, event: Event): void {
