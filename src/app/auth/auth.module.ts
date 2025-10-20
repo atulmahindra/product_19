@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @NgModule({
@@ -14,6 +15,6 @@ import { AuthService } from './auth.service';
     CommonModule,
     AuthRoutingModule
   ],
-  providers: [AuthService]
+  providers: [AuthService,CookieService]
 })
 export class AuthModule { }
