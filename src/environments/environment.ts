@@ -7,12 +7,12 @@ export const environment = {
   //  API_URL: 'https://logioneapi.whizzard.in/',
     // API_URL:"http://20.219.251.153:8443/",
       // API_URL:"https://logioneapi.mahindralogistics.com/",
-      API_URL:"https://logioneapi.mlldev.com/",
-      APP_URL:"https://logione.mlldev.com/",
+      API_URL:"https://vedaaapi.mlldev.com/",
+      APP_URL:"https://vedaa.mlldev.com/",
     // API_URL:"https://logione.mllqa.com/",
   // API_URL:"http://localhost:3040/",
    secretKey: "mllf3xpex2kPk",
-   ssoLogin: 'https://login.mlldev.com/sso/login?client_id=logione'
+   ssoLogin: 'https://login.mlldev.com/sso/login?client_id=veda-sd'
   //  ssoLogin: 'https://login.mllqa.com/sso/login?client_id=sso'
 };
 
