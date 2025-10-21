@@ -52,7 +52,40 @@ export class AuthService {
     })
   );
 }
+singOut(){
+    // alert("kjdf")
 
+
+    const userData = JSON.parse(localStorage.getItem('loggedin user data')|| '{}') ;
+    console.log(userData.id)
+
+
+        // this.cookieService.delete('access_token', '/', '.mlldev.com');
+        // console.log(res, "logout done");
+       this.user.next(null);
+    // this.router.navigate(['']);
+    localStorage.removeItem("loggedin user data");
+    localStorage.removeItem("SelectedServicesdata");
+    localStorage.removeItem("multiuser");
+  
+    // this.tokenExpirationTimer = null;
+
+  }
+autosingIn(){
+    const userData = JSON.parse(localStorage.getItem('loggedin user data')|| '{}') ;
+
+    if(!userData){
+      return;
+    }
+    const loggedInUser = new User(userData.id,userData.email, userData.fullName, userData._token, userData.role,userData.gender,userData.roleId,userData.isDownload);
+
+    if(loggedInUser.token){
+      this.user.next(loggedInUser);
+      // const expirationduration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
+      // this.autoSingOUt(expirationduration)
+    }
+
+  }
 
   authenticatedUser(id:any,email:string, fullName:string, token:string, role:string,gender:string, roleId:number,isDownload:boolean){
 
