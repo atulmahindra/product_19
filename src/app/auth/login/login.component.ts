@@ -3,6 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { SharedService } from '../../shared/shared.service';
 
 
 
@@ -14,12 +15,16 @@ import { AuthService } from '../auth.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements  OnInit {
-constructor(private router: Router,private _authService: AuthService,private cookieService: CookieService) {
+
+  errormsg: any;
+constructor(private router: Router,private _authService: AuthService,private cookieService: CookieService,private _shared_serviec: SharedService) {
     
   }
+  
   ngOnInit(): void {
+    this.errormsg = this._shared_serviec.errorMsgs;
     // Add initialization logic here
-      const token = '4ea11b6a-d564-4a6e-9284-61b3ba2c4352';
+      const token = '0436b7a7-51b3-4e06-98fc-ab2c92045a4a';
     this.cookieService.set('access_token', token, 7); // Expires in 7 days
     console.log('Cookie set:', this.cookieService.get('access_token'));
      if(this.cookieService.check('access_token')){
@@ -28,7 +33,11 @@ constructor(private router: Router,private _authService: AuthService,private coo
        
         if (res) {
           this.router.navigate(['/backend']);
+          
         }
+      }),((error:any)=>{
+        console.log("Error during SSO validation:", error);
+        // Optionally handle the error, e.g., show a message to the user
       });
      }else{
       // alert("false")
