@@ -16,11 +16,14 @@ greeting: string = '';
   setGreeting() {
     const hour = new Date().getHours();
     if (hour < 12) {
-      this.greeting = 'Good morning!';
+      this.greeting = 'Good Morning!';
     } else if (hour < 18) {
-      this.greeting = 'Good afternoon!';
+      this.greeting = 'Good Afternoon!';
     } else {
-      this.greeting = 'Good evening!';
+      this.greeting = 'Good Evening!';
     }
+  }
+  ngOnInit(): void {
+    
   }
 }
