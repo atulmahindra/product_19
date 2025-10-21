@@ -7,7 +7,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener }
   styleUrl: './side-nav.component.scss'
 })
 export class SideNavComponent implements AfterViewInit {
-  isCollapsed = false;
+  isCollapsed = true;
   openDropdown: string | null = null;
   dropdownHeights: { [key: string]: number } = {};
 

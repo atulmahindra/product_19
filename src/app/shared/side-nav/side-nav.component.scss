@@ -11,6 +11,8 @@
 
 .sidebar.collapsed {
   width: 85px;
+  z-index: 1;
+  position: relative;
 }
 
 .sidebar .sidebar-header {
