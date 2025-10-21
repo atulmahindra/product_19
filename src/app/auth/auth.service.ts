@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { User } from './app-user/user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -12,7 +12,7 @@ export class AuthService {
   user = new BehaviorSubject<User | null>(null);
   constructor(private http:HttpClient) { }
 
-   validateTokenSSO(ssoToken: any) {
+  validateTokenSSO(ssoToken: any) {
   console.log('SSO Token:', ssoToken);
 
   return this.http.post(
@@ -20,12 +20,49 @@ export class AuthService {
     { token: ssoToken },
     { withCredentials: true }
   ).pipe(
+    tap((res: any) => {
+      console.log('✅ SSO Validation Success:', res);
+      this.authenticatedUser(
+        res.id,
+        res.email,
+        res.fullName,
+        res.token,
+        res.role,
+        res.gender,
+        res.roleId,
+        res.isDownload
+      );
+    }),
     catchError((err: HttpErrorResponse) => {
-      console.error('SSO Token validation failed:', err.message);
-      // Optionally show a user-friendly message or handle specific errors
+      console.error('❌ SSO Token Validation Failed');
+
+      if (err.error) {
+        // API returned a structured error object
+        console.error('Error Message:', err.error.message || 'Unknown error');
+        console.error('Status Code:', err.error.status_code || err.status);
+      } else {
+        // Network or unexpected errors
+        console.error('Unexpected Error:', err.message);
+      }
+
+      // Optionally, show a friendly message or handle redirect
+      // this.router.navigate(['/login']);
+
       return throwError(() => err);
     })
   );
 }
 
+
+  authenticatedUser(id:any,email:string, fullName:string, token:string, role:string,gender:string, roleId:number,isDownload:boolean){
+
+    // const expirationDate = new Date(new Date().getTime() + expiresIn*1000);
+    const user  = new User(id,email,fullName,token,role,gender,roleId,isDownload);
+    console.log("users data",user)
+    this.user.next(user);
+
+    // this.autoSingOUt(expiresIn*1000)
+    localStorage.setItem('loggedin user data', JSON.stringify(user) )
+  }
+  
 }
