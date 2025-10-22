@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from './snackbar/snackbar.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MyDialogContentComponent } from './my-dialog-content/my-dialog-content.component';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-
-  constructor(private _snackBar: MatSnackBar){
+  private API_URL= environment.API_URL;
+  constructor(private _snackBar: MatSnackBar,private dialog: MatDialog,private http:HttpClient){
 
   }
+
     opensnacbar(message:string){
     console.log("sancbar", message);
     this._snackBar.openFromComponent(SnackbarComponent,{
@@ -49,6 +54,18 @@ errorMsgs:any = {
     'Not Found':'Not Found',
     USER_NOT_ACTIVATED: "USER_NOT_ACTIVATED"
   }
+open_dialog(data:any){
+   this.dialog.open(MyDialogContentComponent, {
+      // width: '400px',
+        panelClass: 'custom-dialog-container', // custom class for dialog box
+    backdropClass: 'custom-dialog-backdrop', // custom blur for background
+      data: data
+    });
 
-   
+    }
+
+    create_new_project(data) {
+    return this.http.get<any>(this.API_URL+`v1/analysis/getOptions`,data)
+    
+  }
 }
