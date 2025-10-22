@@ -22,11 +22,12 @@ export class AuthService {
   ).pipe(
     tap((res: any) => {
       console.log('✅ SSO Validation Success:', res);
+      
       this.authenticatedUser(
         res.id,
         res.email,
         res.fullName,
-        res.token,
+        ssoToken,
         res.role,
         res.gender,
         res.roleId,
