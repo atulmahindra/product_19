@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { SharedService } from '../shared.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class MyDialogContentComponent {
 constructor(
   private fb: FormBuilder,
   private http: HttpClient,
+   private router: Router,
   private _shared_service: SharedService,
     public dialogRef: MatDialogRef<MyDialogContentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -51,6 +53,10 @@ this.projectForm = this.fb.group({
       // Example API call
       this._shared_service.create_new_project(payload).subscribe((res)=>{
         console.log(res)
+        if(res){
+           this.dialogRef.close(true);
+            this.router.navigate(['/Dashboard']);
+        }
       });
     }
   }

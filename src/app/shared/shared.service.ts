@@ -3,8 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from './snackbar/snackbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MyDialogContentComponent } from './my-dialog-content/my-dialog-content.component';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +13,15 @@ export class SharedService {
   private API_URL= environment.API_URL;
   constructor(private _snackBar: MatSnackBar,private dialog: MatDialog,private http:HttpClient){
 
+  }
+  err_hand(err:HttpErrorResponse){
+    // if(err.error.message = 'Token was not recognised'){
+    //   return throwError(() => new Error(err.error.message));
+    // }
+    console.log(err.error.message);
+    return throwError(() => this.opensnacbar(this.errorMsgs[err.error.message]));
+
+    // this.display_err = this.errors[err.error.error.message];
   }
 
     opensnacbar(message:string){
@@ -66,8 +76,16 @@ open_dialog(data:any){
 
     create_new_project(data) {
       console.log(data.project_name)
-        const queryString = new URLSearchParams(data.project_name as any).toString();
+        // const queryString = new URLSearchParams(data.project_name as any).toString();
+          const queryString = new URLSearchParams(data.project_name).toString().replace(/\+/g, '%20');
+
     return this.http.get<any>(this.API_URL+`v1/analysis/getOptions?${queryString}`)
-    
+     .pipe(
+      catchError(err=>{
+        console.log(err)
+       return this.err_hand(err);
+
+      })
+    )
   }
 }
