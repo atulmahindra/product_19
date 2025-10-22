@@ -12,21 +12,26 @@ interface Message {
 /** A tiny decision tree of yes/no questions */
 interface Node {
   q?: string;       // question text (optional for terminal nodes)
-  yes?: number;    // index of next node for "Yes"
+  Warehousing?: number;    // index of next node for "Yes"
   no?: number;     // index of next node for "No"
   end?: string;    // optional end message
 }
 
-const FLOW: Node[] = [
-  { q: 'Do you want to create a new Angular project?', yes: 1, no: 2 },
-  { q: 'selcted yes', yes: 3, no: 4 },
-  { q: 'selected no', yes: 3, no: 6 },
-  { q: '', end: 'Great! Run: ng add @angular/material' },
-  { q: '', end: 'No problem. You can style later with plain CSS.' },
-  { q: '', end: 'Create one with: ng new my-app --standalone' },
-  { q: 'Is this helpful?', yes: 1, no: 2 },
-  { q: '', end: 'Awesome! Have a great day.' },
-  { q: '', end: 'Thanks for the feedback — I will improve.' },
+const FLOW: any[] = [
+  { 
+    q: "Great choice, John! Let’s start building a fresh solution. Please provide me with the project details (scope, requirements, and objectives), and I’ll help you design the best-fit solution.", 
+    Warehousing: 3, 
+    Transportation: 2 
+  },
+  { q: "Selected yes", yes: 3, no: 4 },
+  { q: "Selected no", yes: 3, no: 6 },
+  { q: "You’ve chosen Warehousing. Please select the business vertical you want to work on.", Consumer: 3, 
+    Manufacturing: 6  },
+  { end: "Selected Consumer" },
+  { end: "Selected Manufacturing" },
+  { q: "Is this helpful?", yes: 7, no: 8 },
+  { end: "Awesome! Have a great day." },
+  { end: "Thanks for the feedback — I will improve." },
 ];
 @Component({
   selector: 'app-dashboard',
@@ -73,7 +78,7 @@ title = 'yesno-bot';
     }
 
     // move to next node by choice
-    const nextIndex = choice === 'Yes' ? node.yes : node.no;
+    const nextIndex = choice === 'Warehousing' ? node.Warehousing : node.Transportation;
 console.log('Next node index:', nextIndex);
     if (typeof nextIndex === 'number') {
       this.step.set(nextIndex);

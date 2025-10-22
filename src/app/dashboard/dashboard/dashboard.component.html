@@ -15,9 +15,9 @@
     </div>
   </div>
 
-  <div *ngIf="!finished()" class="buttons">
-    <button mat-raised-button color="primary" (click)="onAnswer('Yes')">Yes</button>
-    <button mat-raised-button color="accent" (click)="onAnswer('No')">No</button>
+  <div *ngIf="!finished()" class="buttons" >
+    <button mat-raised-button color="primary" (click)="onAnswer('Warehousing')" style="color: white;">Warehousing</button>
+    <button mat-raised-button color="accent" (click)="onAnswer('Transportation')" style="color: white;">Transportation</button>
   </div>
 
   <div *ngIf="finished()" class="buttons">

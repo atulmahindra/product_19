@@ -11,7 +11,7 @@ const routes: Routes = [
   { 
     path: 'Dashboard', 
     component: DashboardComponent,
-    canActivate: [AuthGuard]   // 👈 Guard applied here
+    canActivate: [AuthGuard]  
   }
 ];
 @NgModule({
