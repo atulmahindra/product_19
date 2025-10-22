@@ -24,7 +24,7 @@ constructor(private router: Router,private _authService: AuthService,private coo
   ngOnInit(): void {
     this.errormsg = this._shared_serviec.errorMsgs;
     // Add initialization logic here
-      const token = '59823ad0-faa0-4fd1-992a-5a7beb3f704e';
+      const token = '10ac1bc2-e521-4c05-9d62-8f473c0e6cbc';
     this.cookieService.set('access_token', token, 7); // Expires in 7 days
     console.log('Cookie set:', this.cookieService.get('access_token'));
      if(this.cookieService.check('access_token')){

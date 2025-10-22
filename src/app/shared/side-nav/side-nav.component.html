@@ -26,7 +26,7 @@
           </a>
 
           <ul class="dropdown-menu"
-              [style.height]="openDropdown === item.label ? dropdownHeights[item.label] + 'px' : '0'">
+              [style.min-height]="openDropdown === item.label ? dropdownHeights[item.label] + 'px' : '0'">
             <li *ngFor="let sub of item.children" class="nav-item">
               <a class="nav-link dropdown-link" [routerLink]="sub.link">{{ sub.label }}</a>
             </li>

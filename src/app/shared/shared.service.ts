@@ -65,7 +65,9 @@ open_dialog(data:any){
     }
 
     create_new_project(data) {
-    return this.http.get<any>(this.API_URL+`v1/analysis/getOptions`,data)
+      console.log(data.project_name)
+        const queryString = new URLSearchParams(data.project_name as any).toString();
+    return this.http.get<any>(this.API_URL+`v1/analysis/getOptions?${queryString}`)
     
   }
 }

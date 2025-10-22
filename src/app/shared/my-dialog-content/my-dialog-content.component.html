@@ -7,8 +7,8 @@
       <div class="custom-input">
         <mat-form-field appearance="fill" class="w-full">
           <mat-label>Project Name</mat-label>
-          <input matInput placeholder="Enter Project Name" formControlName="projectName" />
-          <mat-error *ngIf="projectForm.get('projectName')?.hasError('required')">
+          <input matInput placeholder="Enter Project Name" formControlName="project_name" />
+          <mat-error *ngIf="projectForm.get('project_name')?.hasError('required')">
             Project name is required
           </mat-error>
         </mat-form-field>

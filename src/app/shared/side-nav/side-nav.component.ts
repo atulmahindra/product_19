@@ -56,6 +56,7 @@ export class SideNavComponent implements AfterViewInit {
     menus.forEach((menu: HTMLElement) => {
       const parent = menu.closest('.dropdown-container');
       const key = parent?.getAttribute('data-key') || '';
+      console.log(menu.scrollHeight)
       this.dropdownHeights[key] = menu.scrollHeight;
     });
 

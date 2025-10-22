@@ -29,7 +29,7 @@ constructor(
 ngOnInit(){
   console.log(this.data)
 this.projectForm = this.fb.group({
-      projectName: ['', Validators.required]
+      project_name: ['', Validators.required]
     });
 }
   onClose(): void {
@@ -46,10 +46,10 @@ this.projectForm = this.fb.group({
   onSubmit(): void {
     console.log(this.projectForm.value)
     if (this.projectForm.valid) {
-      const payload = { projectName: this.projectForm.value.projectName };
+      const payload = { project_name: this.projectForm.value };
       
       // Example API call
-      this._shared_service.create_new_project({project_name:payload.projectName}).subscribe((res)=>{
+      this._shared_service.create_new_project(payload).subscribe((res)=>{
         console.log(res)
       });
     }
