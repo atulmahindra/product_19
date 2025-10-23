@@ -5,12 +5,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MyDialogContentComponent } from './my-dialog-content/my-dialog-content.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { catchError, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
   private API_URL= environment.API_URL;
+
+  bot_obj = new BehaviorSubject<any>(null);
   constructor(private _snackBar: MatSnackBar,private dialog: MatDialog,private http:HttpClient){
 
   }

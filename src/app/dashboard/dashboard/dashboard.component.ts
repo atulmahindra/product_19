@@ -1,38 +1,27 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, effect } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button'
+import { MatButtonModule } from '@angular/material/button';
+import { SharedService } from '../../shared/shared.service';
+import { Router } from '@angular/router';
 
-/** Simple message type */
+/** Message type */
 interface Message {
   from: 'bot' | 'user';
   text: string;
   ts: number;
 }
 
-/** A tiny decision tree of yes/no questions */
-interface Node {
-  q?: string;       // question text (optional for terminal nodes)
-  Warehousing?: number;    // index of next node for "Yes"
-  no?: number;     // index of next node for "No"
-  end?: string;    // optional end message
+/** Flow node type */
+interface FlowNode {
+  display_message?: string;
+  options?: string[];
+  option_type?: string;
+  upload_file?: number;
+  recordID?: string;
+  end?: string;
+  [key: string]: any;
 }
 
-const FLOW: any[] = [
-  { 
-    q: "Great choice, John! Let’s start building a fresh solution. Please provide me with the project details (scope, requirements, and objectives), and I’ll help you design the best-fit solution.", 
-    Warehousing: 3, 
-    Transportation: 2 
-  },
-  { q: "Selected yes", yes: 3, no: 4 },
-  { q: "Selected no", yes: 3, no: 6 },
-  { q: "You’ve chosen Warehousing. Please select the business vertical you want to work on.", Consumer: 3, 
-    Manufacturing: 6  },
-  { end: "Selected Consumer" },
-  { end: "Selected Manufacturing" },
-  { q: "Is this helpful?", yes: 7, no: 8 },
-  { end: "Awesome! Have a great day." },
-  { end: "Thanks for the feedback — I will improve." },
-];
 @Component({
   selector: 'app-dashboard',
   standalone: false,
@@ -40,17 +29,34 @@ const FLOW: any[] = [
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-title = 'yesno-bot';
+  title = 'yesno-bot';
 
   messages = signal<Message[]>([]);
   step = signal<number>(0);
   finished = signal<boolean>(false);
-  
-  currentNode = computed(() => FLOW[this.step()]);
 
-  constructor() {
-    this.pushBot(this.currentPrompt());
-  }
+  FLOW = signal<FlowNode[]>([{ options: ["Warehousing", "Transportation"], option_type: "solution_type", upload_file: 0, display_message: "What solution you want to develop today? Please select one.", recordID: "68fa5e7e25e064d2f4e164a3" }]); // ✅ store API result here
+  currentNode = computed(() => this.FLOW()[this.step()] || {});
+
+  constructor(private router: Router, private _shared_service: SharedService) {}
+
+ ngOnInit(): void {
+  // ✅ Fetch flow data from API dynamically
+  this._shared_service.bot_obj.subscribe((res: any) => {
+    if (res) {
+      // 🔹 Ensure the response is always an array
+      const flowArray = Array.isArray(res) ? res : [res];
+
+      this.FLOW.set(flowArray); // ✅ Always set as array
+      console.log('FLOW loaded:', this.FLOW());
+
+      // Start conversation only after data is loaded
+      this.pushBot(this.currentPrompt());
+    } else {
+      console.warn('Invalid flow response:', res);
+    }
+  });
+}
 
   trackByMsg(_index: number, item: Message) {
     return item.ts;
@@ -58,97 +64,83 @@ title = 'yesno-bot';
 
   currentPrompt(): string {
     const node = this.currentNode();
-    console.log('Current node:', node);
-    return node.end ? node.end : (node.q ?? '');
+    return node.end ? node.end : (node.display_message ?? '');
   }
 
-  onAnswer(choice: any) {
-    console.log('User choice:', choice);
+  onAnswer(choice: string) {
     if (this.finished()) return;
-
-    // push user answer
     this.pushUser(choice);
 
     const node = this.currentNode();
 
-    // if this node ends the flow
     if (node.end) {
       this.finished.set(true);
       return;
     }
 
-    // move to next node by choice
-    const nextIndex = choice === 'Warehousing' ? node.Warehousing : node.Transportation;
-console.log('Next node index:', nextIndex);
-    if (typeof nextIndex === 'number') {
-      this.step.set(nextIndex);
-      const nextNode = FLOW[nextIndex];
-
-      // If next node is terminal, mark finished after bot reply
-        if (nextNode.end) {
-          this.pushBot(nextNode.end);
-          this.finished.set(true);
-        } else {
-          this.pushBot(nextNode.q ?? '');
-        }
-    } else {
-      // safety: if flow is malformed, end politely
-      this.pushBot('Thanks! That was the last question.');
-      this.finished.set(true);
-    }
+    // 👉 Here you can call API to get next flow step dynamically
+    // Example:
+    // this._shared_service.getNextFlow({ selectedOption: choice, recordID: node.recordID }).subscribe({
+    //   next: (nextNode: FlowNode) => {
+    //     // Replace FLOW with new response (single node or array)
+    //     this.FLOW.set([nextNode]);
+    //     this.step.set(0); // always 0 index
+    //     this.pushBot(this.currentPrompt());
+    //   },
+    //   error: (err) => {
+    //     console.error('Error loading next flow:', err);
+    //     this.pushBot('Oops, something went wrong while processing your choice.');
+    //   }
+    // });
   }
 
   reset() {
     this.messages.set([]);
     this.step.set(0);
     this.finished.set(false);
-    this.pushBot(this.currentPrompt());
+    if (this.FLOW().length > 0) {
+      this.pushBot(this.currentPrompt());
+    }
   }
 
   private async pushBot(fullText: string) {
-  // Step 1: Show typing placeholder
-  this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ts: Date.now(),options: ['Yes', 'No'] }]);
-  console.log("messages",this.messages())
-  const index = this.messages().length - 1;
-console.log('Bot message index:', index);
-  // Step 2: Animate dots for 1 seconds
-  const typingDuration = 1000;
-  const dotInterval = 300;
-  let elapsed = 0;
-  while (elapsed < typingDuration) {
-    const dots = '.'.repeat((elapsed / dotInterval) % 4);
+    this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ts: Date.now() }]);
+    const index = this.messages().length - 1;
+
+    const typingDuration = 1000;
+    const dotInterval = 300;
+    let elapsed = 0;
+
+    while (elapsed < typingDuration) {
+      const dots = '.'.repeat((elapsed / dotInterval) % 4);
+      this.messages.update((m) => {
+        const updated = [...m];
+        updated[index] = { ...updated[index], text: `typing${dots}` };
+        return updated;
+      });
+      await new Promise((r) => setTimeout(r, dotInterval));
+      elapsed += dotInterval;
+    }
+
+    const typingSpeed = 10;
     this.messages.update((m) => {
       const updated = [...m];
-      updated[index] = { ...updated[index], text: `typing${dots}` };
+      updated[index] = { ...updated[index], text: '' };
       return updated;
     });
-    await new Promise((r) => setTimeout(r, dotInterval));
-    elapsed += dotInterval;
+
+    for (let i = 0; i < fullText.length; i++) {
+      const current = fullText.slice(0, i + 1);
+      this.messages.update((m) => {
+        const updated = [...m];
+        updated[index] = { ...updated[index], text: current };
+        return updated;
+      });
+      await new Promise((res) => setTimeout(res, typingSpeed));
+    }
   }
-
-  // Step 3: Replace typing text with real message (typed slowly)
-  const typingSpeed = 10; // ms per character
-  this.messages.update((m) => {
-    const updated = [...m];
-    updated[index] = { ...updated[index], text: '' };
-    return updated;
-  });
-
-  for (let i = 0; i < fullText.length; i++) {
-    const current = fullText.slice(0, i + 1);
-    this.messages.update((m) => {
-      const updated = [...m];
-      updated[index] = { ...updated[index], text: current };
-      return updated;
-    });
-    await new Promise((res) => setTimeout(res, typingSpeed));
-  }
-}
-
 
   private pushUser(text: string) {
-    console.log("selected option:", text);
     this.messages.update((m) => [...m, { from: 'user', text, ts: Date.now() }]);
-    console.log('User message:', this.messages);
   }
 }

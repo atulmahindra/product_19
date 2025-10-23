@@ -33,6 +33,7 @@ ngOnInit(){
 this.projectForm = this.fb.group({
       project_name: ['', Validators.required]
     });
+    //  this.router.navigate(['/backend/Dashboard']);
 }
   onClose(): void {
     this.dialogRef.close();
@@ -54,8 +55,10 @@ this.projectForm = this.fb.group({
       this._shared_service.create_new_project(payload).subscribe((res)=>{
         console.log(res)
         if(res){
+          this._shared_service.bot_obj.next(res)
            this.dialogRef.close(true);
-            this.router.navigate(['/Dashboard']);
+            this.router.navigate(['/backend/Dashboard']);
+
         }
       });
     }

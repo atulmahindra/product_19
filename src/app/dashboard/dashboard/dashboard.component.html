@@ -1,8 +1,9 @@
 <div class="chat-container">
-  <div *ngFor="let msg of messages(); trackBy: trackByMsg" 
-       [ngClass]="{ 'bot': msg.from === 'bot', 'user': msg.from === 'user' }" 
-       class="message">
-
+  <div
+    *ngFor="let msg of messages(); trackBy: trackByMsg"
+    [ngClass]="{ 'bot': msg.from === 'bot', 'user': msg.from === 'user' }"
+    class="message"
+  >
     <div class="bubble">
       <ng-container *ngIf="msg.text.startsWith('typing'); else normalText">
         <div class="typing-indicator">
@@ -12,17 +13,22 @@
         </div>
       </ng-container>
       <ng-template #normalText>{{ msg.text }}</ng-template>
+
+      <!-- ✅ Show buttons only for BOT messages -->
+      <div
+        *ngIf="msg.from === 'bot' && !finished() && currentNode()?.options?.length"
+        class="buttons"
+      >
+        <button
+          *ngFor="let option of currentNode().options"
+          mat-raised-button
+          color="primary"
+          (click)="onAnswer(option)"
+          style="color: white; margin-right: 10px;"
+        >
+          {{ option }}
+        </button>
+      </div>
     </div>
   </div>
-
-  <div *ngIf="!finished()" class="buttons" >
-    <button mat-raised-button color="primary" (click)="onAnswer('Warehousing')" style="color: white;">Warehousing</button>
-    <button mat-raised-button color="accent" (click)="onAnswer('Transportation')" style="color: white;">Transportation</button>
-  </div>
-
-  <div *ngIf="finished()" class="buttons">
-    <button mat-stroked-button color="warn" (click)="reset()">Restart</button>
-  </div>
 </div>
-
-
