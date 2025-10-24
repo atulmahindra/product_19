@@ -66,6 +66,15 @@ errorMsgs:any = {
     'Not Found':'Not Found',
     USER_NOT_ACTIVATED: "USER_NOT_ACTIVATED"
   }
+
+   getUser(key: string): any {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (err) {
+      console.error('Error while getting local storage key ', key, err);
+      return '';
+    }
+  }
 open_dialog(data:any){
    this.dialog.open(MyDialogContentComponent, {
       // width: '400px',

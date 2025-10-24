@@ -12,7 +12,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class WelcomeComponent {
 greeting: string = '';
-
+userobject
   constructor(private dialog: MatDialog,private _shared_serviec:SharedService) {
     this.setGreeting();
   }
@@ -28,7 +28,8 @@ greeting: string = '';
     }
   }
   ngOnInit(): void {
-    
+    this.userobject = this._shared_serviec.getUser('loggedin user data');
+    console.log("userslocal",this.userobject);
   }
   openDialog(): void {
     this._shared_serviec.open_dialog({title:"Create New Project ",action:'newpoject'})
