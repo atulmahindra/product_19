@@ -1,0 +1,28 @@
+// start
+ .custom-input {
+::ng-deep .mat-form-field-appearance-fill{
+  width: 100%;
+  background-color: #5A5A5A3D;
+  .mat-mdc-text-field-wrapper{
+    background-color:transparent;
+    .mat-mdc-form-field-infix{
+      .mdc-floating-label{
+        color: white !important;
+      }
+    }
+    .mdc-line-ripple{
+      display: none;
+    }
+  .mat-mdc-form-field-focus-overlay{
+    background-color:transparent;
+  }
+ 
+  }
+  .mat-mdc-form-field-subscript-wrapper{
+  display: none !important; 
+ }
+}
+
+}
+
+// end
