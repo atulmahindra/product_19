@@ -90,4 +90,17 @@ open_dialog(data:any){
       })
     )
   }
+    getOptions_bot(data) {
+      console.log(data)
+    return this.http.post<any>(this.API_URL+`v1/analysis/getOptions`,data)
+     .pipe(
+      catchError(err=>{
+        console.log(err)
+       return this.err_hand(err);
+
+      })
+    )
+  }
+ 
+  
 }

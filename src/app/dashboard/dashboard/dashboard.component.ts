@@ -41,16 +41,16 @@ export class DashboardComponent {
   constructor(private router: Router, private _shared_service: SharedService) {}
 
  ngOnInit(): void {
-  // ✅ Fetch flow data from API dynamically
+
   this._shared_service.bot_obj.subscribe((res: any) => {
     if (res) {
-      // 🔹 Ensure the response is always an array
+
       const flowArray = Array.isArray(res) ? res : [res];
 
       this.FLOW.set(flowArray); // ✅ Always set as array
       console.log('FLOW loaded:', this.FLOW());
 
-      // Start conversation only after data is loaded
+  
       this.pushBot(this.currentPrompt());
     } else {
       console.warn('Invalid flow response:', res);
@@ -78,20 +78,19 @@ export class DashboardComponent {
       return;
     }
 
-    // 👉 Here you can call API to get next flow step dynamically
-    // Example:
-    // this._shared_service.getNextFlow({ selectedOption: choice, recordID: node.recordID }).subscribe({
-    //   next: (nextNode: FlowNode) => {
-    //     // Replace FLOW with new response (single node or array)
-    //     this.FLOW.set([nextNode]);
-    //     this.step.set(0); // always 0 index
-    //     this.pushBot(this.currentPrompt());
-    //   },
-    //   error: (err) => {
-    //     console.error('Error loading next flow:', err);
-    //     this.pushBot('Oops, something went wrong while processing your choice.');
-    //   }
-    // });
+  
+    this._shared_service.getOptions_bot({  key: "solution_design", optionSelected: choice, recordID: node.recordID }).subscribe({
+      next: (nextNode: FlowNode) => {
+       
+        this.FLOW.set([nextNode]);
+        this.step.set(0); // always 0 index
+        this.pushBot(this.currentPrompt());
+      },
+      error: (err) => {
+        console.error('Error loading next flow:', err);
+        this.pushBot('Oops, something went wrong while processing your choice.');
+      }
+    });
   }
 
   reset() {
