@@ -3,6 +3,12 @@ import { NgFor, NgIf, NgClass } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedService } from '../../shared/shared.service';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
+
+interface UploadedFile extends File {
+  status?: 'processing' | 'done' | 'error';
+  progress?: number;
+}
 
 /** Message type */
 interface Message {
@@ -142,4 +148,116 @@ export class DashboardComponent {
   private pushUser(text: string) {
     this.messages.update((m) => [...m, { from: 'user', text, ts: Date.now() }]);
   }
+
+  // upload
+  public isDownload = false;
+  public isLoading = false;
+  public isDragOver = false;
+  public uploadedFiles: UploadedFile[] = [];
+
+  /** Drag events */
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = false;
+  }
+
+  onFileDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = false;
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleFiles(files);
+    }
+  }
+
+  /** File selection */
+  onFileSelect(event: any): void {
+    const files = event.target.files;
+    this.handleFiles(files);
+  }
+
+  /** Handle multiple Excel files */
+  private handleFiles(fileList: FileList): void {
+    const excelFiles: UploadedFile[] = Array.from(fileList).filter(file =>
+      file.name.endsWith('.xlsx') || file.name.endsWith('.xls')
+    );
+
+    if (excelFiles.length === 0) {
+      alert('Only Excel files are allowed!');
+      return;
+    }
+
+    excelFiles.forEach(file => {
+      file.status = 'processing';
+      file.progress = 0;
+      this.uploadedFiles.push(file);
+    });
+
+    this.processFiles(excelFiles);
+  }
+
+  /** Process all uploaded Excel files */
+  private processFiles(files: UploadedFile[]): void {
+    this.isLoading = true;
+    const allData: any = {};
+    let processedCount = 0;
+
+    files.forEach(file => {
+      const reader = new FileReader();
+
+      reader.onprogress = (e: ProgressEvent<FileReader>) => {
+        if (e.lengthComputable) {
+          const progress = Math.round((e.loaded / e.total) * 100);
+          file.progress = progress;
+        }
+      };
+
+      reader.onload = (e: any) => {
+        try {
+          const wb: XLSX.WorkBook = XLSX.read(e.target.result, { type: 'binary' });
+          const jsonData = wb.SheetNames.reduce((acc, sheetName) => {
+            const sheet = wb.Sheets[sheetName];
+            acc[sheetName] = XLSX.utils.sheet_to_json(sheet);
+            return acc;
+          }, {});
+          allData[file.name] = jsonData;
+          file.status = 'done';
+          file.progress = 100;
+        } catch (err) {
+          file.status = 'error';
+        }
+
+        processedCount++;
+        if (processedCount === files.length) {
+          this.isLoading = false;
+          const dataString = JSON.stringify(allData, null, 2);
+          // document.getElementById('output')!.innerText = dataString.slice(0, 400) + '...';
+          this.jsonDownload(dataString);
+        }
+      };
+
+      reader.readAsBinaryString(file);
+    });
+  }
+
+  /** Remove file from the list */
+  removeFile(index: number): void {
+    this.uploadedFiles.splice(index, 1);
+  }
+
+  /** JSON Download link */
+  private jsonDownload(data: any): void {
+    this.isDownload = true;
+    setTimeout(() => {
+      const el = document.querySelector('#download2') as HTMLAnchorElement;
+      el.setAttribute('href', `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
+      el.setAttribute('download', 'excel_to_json.json');
+    }, 500);
+  }
+  // upload end
 }

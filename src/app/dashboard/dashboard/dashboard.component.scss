@@ -74,6 +74,144 @@
 }
 
 
-// search
+// start
+.upload-container {
+  border: 2px dashed #2196f3;
+  border-radius: 12px;
+  text-align: center;
+  padding: 30px;
+  margin: 20px auto;
+  width: 480px;
+  transition: background 0.3s ease;
+}
 
-// search end
+.upload-container.dragover {
+  background: #e3f2fd;
+  border-color: #1976d2;
+}
+
+.btn {
+  display: inline-block;
+  background: #2196f3;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2196f3;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.file-list {
+  margin-top: 20px;
+  width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.file-item {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.file-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.progress-wrapper {
+  background: #eee;
+  border-radius: 6px;
+  height: 6px;
+  margin: 6px 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #2196f3;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.status {
+  font-size: 13px;
+}
+
+.status .done {
+  color: #4caf50;
+}
+.status .processing {
+  color: #ff9800;
+}
+.status .error {
+  color: #f44336;
+}
+
+.remove-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: none;
+  background: transparent;
+  color: #e53935;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.output {
+  max-height: 200px;
+  overflow: auto;
+  background: #f1f1f1;
+  margin: 20px auto;
+  padding: 10px;
+  width: 480px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 13px;
+  color: #333;
+}
+
+.download-btn {
+  display: inline-block;
+  background: #4caf50;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin: 10px auto;
+  text-align: center;
+}
+
+
+//  end

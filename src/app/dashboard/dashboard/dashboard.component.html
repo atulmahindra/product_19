@@ -1,5 +1,58 @@
 <div class="chat-container">
- 
+ <!-- upload -->
+  <div class="upload-container"
+     (drop)="onFileDrop($event)"
+     (dragover)="onDragOver($event)"
+     (dragleave)="onDragLeave($event)"
+     [class.dragover]="isDragOver">
+
+  <p *ngIf="!isLoading">Drag & drop Excel files here or</p>
+
+  <input type="file"
+         id="fileInput"
+         (change)="onFileSelect($event)"
+         accept=".xlsx,.xls"
+         multiple />
+  <label for="fileInput" class="btn">Choose Files</label>
+
+  <div *ngIf="isLoading" class="loader"></div>
+</div>
+
+<!-- Uploaded file list -->
+<div *ngIf="uploadedFiles.length > 0" class="file-list">
+  <h3>Uploaded Files ({{uploadedFiles.length}})</h3>
+
+  <ul>
+    <li *ngFor="let file of uploadedFiles; let i = index">
+      <div class="file-item">
+        <div class="file-details">
+          <strong>{{ file.name }}</strong>
+          <small>({{ (file.size / 1024).toFixed(1) }} KB)</small>
+        </div>
+
+        <div class="progress-wrapper">
+          <div class="progress-bar" [style.width.%]="file.progress"></div>
+        </div>
+
+        <div class="status">
+          <span *ngIf="file.status === 'done'" class="done">✅ Done</span>
+          <span *ngIf="file.status === 'processing'" class="processing">⏳ Reading...</span>
+          <span *ngIf="file.status === 'error'" class="error">❌ Error</span>
+        </div>
+
+        <button class="remove-btn" (click)="removeFile(i)">✖</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- JSON Preview -->
+<!-- <div id="output" class="output"></div> -->
+
+<!-- Download link -->
+<!-- <a id="download2" *ngIf="isDownload" class="download-btn">Download JSON</a> -->
+
+  <!-- upload end -->
   <div
     *ngFor="let msg of messages(); trackBy: trackByMsg"
     [ngClass]="{ 'bot': msg.from === 'bot', 'user': msg.from === 'user' }"
