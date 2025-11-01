@@ -28,46 +28,94 @@
 <ng-container *ngIf="msg.upload_file === 1">
 <div class="file-upload">
   <div style="display: flex;">
-    <div>
-       <h4>Listed File</h4>
-          <div *ngFor="let item of msg.options; let j = index" class="option"
+    <div class="file-list" >
+       <div>Listed File</div>
+       <div class="file-ul">
+          <div *ngFor="let item of msg.options; let j = index" class="file-item_wrap"
             (click)="file_upload()"
             >
-            {{ item.display_text }}
+            <div class="file-info">
+           <span class="file-name"> {{ item.display_text }}</span>
           </div>
+          </div>
+       </div>
         </div>
         <div class="file-list" *ngIf="files.length > 0">
-  <h4>Uploaded File</h4>
+  <div>Uploaded File</div>
 
   <div cdkDropList (cdkDropListDropped)="drop($event)" class="file-ul">
-  <div *ngFor="let file of files; let i = index" cdkDrag class="file-item" style="display: flex;"
-       [ngClass]="{'failed': fileStatus[file.name]?.status === 'failed'}">
-    <div class="file-info">
-      <span>{{ file.name }}</span>
+  <div *ngFor="let file of files; let i = index" cdkDrag class="file-item_wrap" 
+    (cdkDragStarted)="isDragging = true" (cdkDragEnded)="isDragging = false"
+    [ngClass]="{'failed': fileStatus[file.name]?.status === 'failed'}">
+      
+    <div
+  class="file-info" [ngClass]="{
+    'uploading': fileStatus[file.name]?.status === 'uploading',
+    'success': fileStatus[file.name]?.status === 'success',
+    'failed': fileStatus[file.name]?.status === 'failed'
+  }">
+  <span class="file-name">{{ file.name }}</span>
+  
       <div class="status-indicator">
-        <!-- <span *ngIf="fileStatus[file.name]?.status === 'pending'">⏳ Pending</span> -->
-        <span *ngIf="fileStatus[file.name]?.status === 'uploading'">📤 Uploading...</span>
-        <span *ngIf="fileStatus[file.name]?.status === 'success'" class="success">✅ Uploaded</span>
-        <span *ngIf="fileStatus[file.name]?.status === 'failed'" class="error">❌ Failed</span>
-      </div>
-      <div *ngIf="fileStatus[file.name]?.reason" class="error-message">
-        {{ fileStatus[file.name].reason }}
-      </div>
-    </div>
-    <div class="file-actions">
+  <ng-container *ngIf="fileStatus[file.name]?.status === 'uploading'" >
+      <!-- <span>Uploading...</span> -->
+      <div class="progress-bar" [hidden]="isDragging"></div>
+</ng-container>
+
+    <ng-container *ngIf="fileStatus[file.name]?.status === 'success'">
+      <!-- <div class="progress-bar" [hidden]="isDragging"></div> -->
+      <span class="status">Uploaded</span>
+    </ng-container>
+
+    <ng-container *ngIf="fileStatus[file.name]?.status === 'failed'">
+      <!-- <div class="progress-bar" [hidden]="isDragging"></div> -->
+      <span class="status">Failed </span>
+    </ng-container>
+  </div>
+
+  <!-- <div *ngIf="fileStatus[file.name]?.reason" class="error-message">
+    {{ fileStatus[file.name].reason }}
+  </div> -->
+</div>
+ <div class="file-actions_vew">
       <ng-container *ngIf="fileStatus[file.name]?.status !== 'success'; else downloadBtn">
-        <button class="btn-delete" (click)="deleteFile(i)">🗑 Delete</button>
-        <button class="btn-replace" (click)="openReplace(i)">🔁 Replace</button>
-        <button class="btn-reupload" 
-                *ngIf="fileStatus[file.name]?.status === 'failed'"
-                (click)="reuploadFile(i)">
-          🔄 Re-upload
-        </button>
-      </ng-container>
-      <ng-template #downloadBtn>
-        <button class="btn-download" (click)="downloadExcel(i)">⬇️ Download Excel</button>
-      </ng-template>
+  <!-- Replace Button -->
+  <button
+    mat-button
+    class="action-btn white-icon"
+    (click)="openReplace(i)"
+  >
+    <mat-icon>sync</mat-icon>
+    Replace
+  </button>
+
+  <!-- Re-upload Button (only on failure) -->
+  <button
+    mat-button
+    class="action-btn white-icon"
+    *ngIf="fileStatus[file.name]?.status === 'failed'"
+    (click)="reuploadFile(i)"
+  >
+    <mat-icon>refresh</mat-icon>
+    Re-upload
+  </button>
+</ng-container>
+
+<ng-template #downloadBtn>
+  <button
+    mat-button
+    class="action-btn blue-download"
+    (click)="downloadExcel(i)"
+  >
+    <mat-icon>download</mat-icon>
+    Download Excel
+  </button>
+</ng-template>
+
+
     </div>
+
+    
   </div>
 </div>
 </div>
@@ -78,9 +126,11 @@
             (dragover)="!allFilesUploaded && onDragOver($event)"
             [class.disabled]="allFilesUploaded"
           >
-            <p>📂 Drag & Drop Excel files here</p>
-            <p>or</p>
-            <button (click)="fileInput.click()" [disabled]="allFilesUploaded">Browse Files</button>
+            <!-- <p>📂 Drag & Drop Excel files here</p>
+            <p>or</p> -->
+            <button (click)="fileInput.click()" [disabled]="allFilesUploaded">
+              <img src="../../assets/images/upload_file.png" alt="Upload Icon" />
+            </button>
             <input
               #fileInput
               type="file"

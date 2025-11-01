@@ -268,9 +268,9 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
       const file = fileList[i];
       if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
         validFiles.push(file);
-        this.readExcel(file);
+        // this.readExcel(file);
       } else {
-        alert(`❌ Invalid file type: ${file.name} (only .xls/.xlsx allowed)`);
+        // alert(`❌ Invalid file type: ${file.name} (only .xls/.xlsx allowed)`);
       }
     }
 
@@ -283,19 +283,19 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
   }
 
   /** Read Excel and log content (optional) */
-  readExcel(file: File): void {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const firstSheet = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheet];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      console.log(`📘 ${file.name} content:`, jsonData);
-      this.excelData.push({ name: file.name, data: jsonData });
-    };
-    reader.readAsArrayBuffer(file);
-  }
+  // readExcel(file: File): void {
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     const data = new Uint8Array(e.target.result);
+  //     const workbook = XLSX.read(data, { type: 'array' });
+  //     const firstSheet = workbook.SheetNames[0];
+  //     const worksheet = workbook.Sheets[firstSheet];
+  //     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+  //     console.log(`📘 ${file.name} content:`, jsonData);
+  //     this.excelData.push({ name: file.name, data: jsonData });
+  //   };
+  //   reader.readAsArrayBuffer(file);
+  // }
 
   /** Upload all files to API sequentially */
   async uploadAll(): Promise<void> {
@@ -337,7 +337,7 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
             reason: res.reason 
           };
           allSuccess = false;
-          alert(`❌ ${file.name} upload failed: ${res.reason}`);
+          // alert(`❌ ${file.name} upload failed: ${res.reason}`);
         } else {
           this.fileStatus[file.name] = { status: 'success' };
           uploadedFiles.push(file.name);
@@ -369,7 +369,7 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
     } else {
       const successCount = uploadedFiles.length;
       const failedCount = this.files.length - successCount;
-      alert(`${successCount} files uploaded successfully, ${failedCount} files failed. Check the red marked files and try re-uploading them.`);
+      // alert(`${successCount} files uploaded successfully, ${failedCount} files failed. Check the red marked files and try re-uploading them.`);
     }
   }
 
@@ -463,7 +463,7 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
     // remove old excelData entry
     this.excelData = this.excelData.filter(f => f.name !== old.name);
     // read new file content
-    this.readExcel(file);
+    // this.readExcel(file);
     // reset status for the replaced file
     this.fileStatus[file.name] = { status: 'pending' };
     // remove old status entry if different name
