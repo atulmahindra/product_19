@@ -55,13 +55,18 @@
       </div>
     </div>
     <div class="file-actions">
-      <button class="btn-delete" (click)="deleteFile(i)">🗑 Delete</button>
-      <button class="btn-replace" (click)="openReplace(i)">🔁 Replace</button>
-      <button class="btn-reupload" 
-              *ngIf="fileStatus[file.name]?.status === 'failed'"
-              (click)="reuploadFile(i)">
-        🔄 Re-upload
-      </button>
+      <ng-container *ngIf="fileStatus[file.name]?.status !== 'success'; else downloadBtn">
+        <button class="btn-delete" (click)="deleteFile(i)">🗑 Delete</button>
+        <button class="btn-replace" (click)="openReplace(i)">🔁 Replace</button>
+        <button class="btn-reupload" 
+                *ngIf="fileStatus[file.name]?.status === 'failed'"
+                (click)="reuploadFile(i)">
+          🔄 Re-upload
+        </button>
+      </ng-container>
+      <ng-template #downloadBtn>
+        <button class="btn-download" (click)="downloadExcel(i)">⬇️ Download Excel</button>
+      </ng-template>
     </div>
   </div>
 </div>

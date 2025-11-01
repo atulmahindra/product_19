@@ -52,6 +52,21 @@ interface FileUpload {
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
+  /** Download Excel file by index */
+  downloadExcel(index: number): void {
+    const file = this.files[index];
+    if (!file) return;
+    const url = window.URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 100);
+  }
   files: File[] = [];
   excelData: any[] = [];
   fileStatus: { [key: string]: { status: 'pending' | 'uploading' | 'success' | 'failed', reason?: string } } = {};
