@@ -83,6 +83,49 @@
   max-width: 80%;
   animation: fadeIn 0.3s ease-in;
 }
+    .drop-zone {
+      border: 2px dashed #1e90ff;
+      border-radius: 10px;
+      background: #181c24;
+      padding: 32px 24px;
+      text-align: center;
+      color: #e0e6f6;
+      margin: 24px 0;
+      transition: border-color 0.3s, background 0.3s;
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #007bff;
+      background: #23293a;
+    }
+
+    .drop-zone p {
+      font-size: 1.1rem;
+      margin: 0 0 8px 0;
+      color: #b3c2e1;
+    }
+
+    .drop-zone button {
+      background: linear-gradient(90deg, #1e90ff 0%, #007bff 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 2px 8px rgba(30,144,255,0.08);
+      transition: background 0.2s;
+    }
+
+    .drop-zone button:hover {
+      background: linear-gradient(90deg, #007bff 0%, #1e90ff 100%);
+    }
+
+    .drop-zone input[type="file"] {
+      display: none;
+    }
 
 .message.user .bubble {
   background-color: #2C2C2C;
@@ -339,6 +382,64 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: white;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .status-indicator {
+    font-size: 0.9em;
+    margin-top: 4px;
+  }
+
+  .success {
+    color: #4CAF50;
+  }
+
+  .error {
+    color: #f44336;
+  }
+
+  .error-message {
+    font-size: 0.8em;
+    color: #f44336;
+    margin-top: 2px;
+  }
+}
+
+.file-item {
+  &.failed {
+    border: 1px solid #f44336;
+    background-color: rgba(244, 67, 54, 0.1);
+  }
+}
+
+/* Drag and drop styling */
+.cdk-drag-preview {
+  .file-info {
+    color: white !important;
+    span {
+      color: white !important;
+    }
+  }
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.file-ul.cdk-drop-list-dragging .file-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.file-item.cdk-drag-preview {
+  background-color: #444444;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  * {
+    color: white !important;
+  }
 }
 
 .file-icon {
@@ -427,3 +528,6 @@ button:disabled {
 
 
 
+.file-upload {
+  background-color: #232323;
+}

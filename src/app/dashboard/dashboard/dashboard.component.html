@@ -26,7 +26,7 @@
           </div>
 </ng-container>
 <ng-container *ngIf="msg.upload_file === 1">
-<div>
+<div class="file-upload">
   <div style="display: flex;">
     <div>
        <h4>Listed File</h4>
@@ -40,39 +40,58 @@
   <h4>Uploaded File</h4>
 
   <div cdkDropList (cdkDropListDropped)="drop($event)" class="file-ul">
-  <div *ngFor="let file of files; let i = index" cdkDrag class="file-item" style="display: flex;">
+  <div *ngFor="let file of files; let i = index" cdkDrag class="file-item" style="display: flex;"
+       [ngClass]="{'failed': fileStatus[file.name]?.status === 'failed'}">
     <div class="file-info">
       <span>{{ file.name }}</span>
+      <div class="status-indicator">
+        <!-- <span *ngIf="fileStatus[file.name]?.status === 'pending'">⏳ Pending</span> -->
+        <span *ngIf="fileStatus[file.name]?.status === 'uploading'">📤 Uploading...</span>
+        <span *ngIf="fileStatus[file.name]?.status === 'success'" class="success">✅ Uploaded</span>
+        <span *ngIf="fileStatus[file.name]?.status === 'failed'" class="error">❌ Failed</span>
+      </div>
+      <div *ngIf="fileStatus[file.name]?.reason" class="error-message">
+        {{ fileStatus[file.name].reason }}
+      </div>
     </div>
     <div class="file-actions">
       <button class="btn-delete" (click)="deleteFile(i)">🗑 Delete</button>
-      <!-- <button class="btn-reupload" (click)="reuploadFile(i)">🔁 Re-upload</button> -->
+      <button class="btn-replace" (click)="openReplace(i)">🔁 Replace</button>
+      <button class="btn-reupload" 
+              *ngIf="fileStatus[file.name]?.status === 'failed'"
+              (click)="reuploadFile(i)">
+        🔄 Re-upload
+      </button>
     </div>
   </div>
 </div>
 </div>
           </div>
           <div
-  class="drop-zone"
-  (drop)="onFileDropped($event)"
-  (dragover)="onDragOver($event)"
->
-  <p>📂 Drag & Drop Excel files here</p>
-  <p>or</p>
-  <button (click)="fileInput.click()">Browse Files</button>
-  <input
-    #fileInput
-    type="file"
-    multiple
-    accept=".xls,.xlsx"
-    (change)="onFileBrowse($event)"
-    hidden
-  />
+            class="drop-zone"
+            (drop)="!allFilesUploaded && onFileDropped($event)"
+            (dragover)="!allFilesUploaded && onDragOver($event)"
+            [class.disabled]="allFilesUploaded"
+          >
+            <p>📂 Drag & Drop Excel files here</p>
+            <p>or</p>
+            <button (click)="fileInput.click()" [disabled]="allFilesUploaded">Browse Files</button>
+            <input
+              #fileInput
+              type="file"
+              multiple
+              accept=".xls,.xlsx"
+              (change)="onFileBrowse($event)"
+              [disabled]="allFilesUploaded"
+              hidden
+            />
+  <!-- Hidden input used to replace a specific file -->
+  <input id="replaceInput" type="file" accept=".xls,.xlsx" (change)="onReplaceSelected($event)" hidden />
 </div>
 
 
 
-<button (click)="uploadAll()" >
+<button (click)="uploadAll()" [disabled]="allFilesUploaded">
   🚀 Upload All
 </button>
 
