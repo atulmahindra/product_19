@@ -12,6 +12,15 @@ export class AuthService {
   user = new BehaviorSubject<User | null>(null);
   constructor(private http:HttpClient) { }
 
+   getUser(key: string): any {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (err) {
+      console.error('Error while getting local storage key ', key, err);
+      return '';
+    }
+  }
+
   validateTokenSSO(ssoToken: any) {
   console.log('SSO Token:', ssoToken);
 
@@ -26,7 +35,7 @@ export class AuthService {
       this.authenticatedUser(
         res.id,
         res.email,
-        res.fullName,
+        res.first_name,
         ssoToken,
         res.role,
         res.gender,

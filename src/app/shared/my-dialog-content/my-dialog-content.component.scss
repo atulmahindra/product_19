@@ -1,6 +1,20 @@
 .custome_idalog{
     position: relative;
-   
+   background-color: #56565661;
+}
+.subm_bt {
+  background-color: #606060;
+  border-radius: 4px; /* as you mentioned earlier */
+  padding: 8px 20px;
+
+  ::ng-deep &.mat-mdc-button:not(:disabled) {
+    color: white;
+  }
+
+  &:hover {
+    background-color: #606060 !important; /* same background on hover */
+    color: white !important; /* ensure text color remains white */
+  }
 }
 
 
@@ -10,7 +24,7 @@
   width: 400px;
   background-color: transparent;
   .mat-mdc-text-field-wrapper{
-    background-color:#6e6e6e91;
+    background-color:#4D4D4D66;
     border: 1px solid #6E6E6E;
     .mat-mdc-form-field-infix{
       .mdc-floating-label{

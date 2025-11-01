@@ -7,6 +7,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 
 @NgModule({
   declarations: [
@@ -16,7 +21,11 @@ import { FlexLayoutModule } from '@ngbracket/ngx-layout';
   imports: [
     CommonModule,
     MatCardModule,
+    FormsModule,
     FlexLayoutModule,
+    DragDropModule,
+    MatInputModule,
+    MatIconModule,
     MatButtonModule,
     DashboardRoutingModule
   ]

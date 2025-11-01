@@ -3,29 +3,46 @@ import { NgFor, NgIf, NgClass } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedService } from '../../shared/shared.service';
 import { Router } from '@angular/router';
-import * as XLSX from 'xlsx';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
-interface UploadedFile extends File {
-  status?: 'processing' | 'done' | 'error';
-  progress?: number;
-}
+import * as XLSX from 'xlsx';
 
 /** Message type */
 interface Message {
   from: 'bot' | 'user';
   text: string;
+  options: string[] | FileUpload[];
+  key: string;
+  upload_file: number;
+  file_view?: number,
   ts: number;
+  uploadedFiles?: string[];
+  confirmation_message?: string
 }
 
 /** Flow node type */
 interface FlowNode {
   display_message?: string;
-  options?: string[];
+  options?: string[] | FileUpload[]
   option_type?: string;
   upload_file?: number;
+  file_view?: number;
   recordID?: string;
   end?: string;
   [key: string]: any;
+}
+
+interface FileUploadResponse {
+  message?: string,
+  reason?: string,
+  file_name?: string
+}
+
+interface FileUpload {
+  display_text: string
+  file_type: string
+  file_upload: number
+  error: string
 }
 
 @Component({
@@ -35,45 +52,83 @@ interface FlowNode {
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  title = 'yesno-bot';
 
-  messages = signal<Message[]>([]);
+  // file upload
+   files: File[] = [];
+  excelData: any[] = [];
+  node = { recordID: '68f1eb62f530a91e52ce5f47' }; 
+  // file uploadend
+  file_vew: boolean = false;
+  file_response: any;
+  donwload_files: any;
+  title = 'yesno-bot';
+  isDragging = false
+  isAPICall = false
+  searchText: string = '';
+  messages = signal<any[]>([]);
   step = signal<number>(0);
   finished = signal<boolean>(false);
 
-  FLOW = signal<FlowNode[]>([{ options: ["Warehousing", "Transportation"], option_type: "solution_type", upload_file: 0, display_message: "What solution you want to develop today? Please select one.", recordID: "68fa5e7e25e064d2f4e164a3" }]); // ✅ store API result here
-  currentNode = computed(() => this.FLOW()[this.step()] || {});
+  FLOW = signal<any>([{ options: [], option_type: "", upload_file: 0, file_view: 0, display_message: "Great choise, VS! Let's start building a fresh solution. Please provide me with the project details(scope, requirements, and objectives), and I will help you design the best-fit solution.", recordID: "" }]); // ✅ store API result here
+  currentNode = computed(() => this.FLOW()[this.FLOW().length - 1] || {});
+  fileUpload = signal<FileUpload[]>([])
 
-  constructor(private router: Router, private _shared_service: SharedService) {}
-
- ngOnInit(): void {
-
-  this._shared_service.bot_obj.subscribe((res: any) => {
-    if (res) {
-
-      const flowArray = Array.isArray(res) ? res : [res];
-
-      this.FLOW.set(flowArray); // ✅ Always set as array
-      console.log('FLOW loaded:', this.FLOW());
-
-  
-      this.pushBot(this.currentPrompt());
-    } else {
-      console.warn('Invalid flow response:', res);
-    }
-  });
-}
+  constructor(private router: Router, private _shared_service: SharedService) { }
+  projectname
+  fileuploaded: boolean = false;
+  ngOnInit(): void {
+    this._shared_service.project_name.subscribe((res) => {
+      if (res) {
+        this.projectname = res
+      }
+    })
+    this._shared_service.bot_obj.subscribe((res: any) => {
+      if (res) {
+        this.FLOW.update(value => [...value, res])
+        console.log("flow", this.FLOW());
+        console.log('FLOW loaded:', this.FLOW());
+        this.pushBot(this.currentPrompt(), '');
+       
+      } else {
+        console.log('Invalid flow response:', res);
+      }
+    });
+    // console.log("currentNode",this.currentNode())
+  }
 
   trackByMsg(_index: number, item: Message) {
     return item.ts;
   }
 
   currentPrompt(): string {
+    console.log("currentNode in currentPrompt", this.currentNode()) 
     const node = this.currentNode();
-    return node.end ? node.end : (node.display_message ?? '');
+    return node.end ? node.end : (node ?? '');
   }
+handleOptionSelect(option: any) {
+  console.log("option", option);
+  console.log("currentNode", this.currentNode());
+ if(this.currentNode().upload_file === 1){
+  alert("jkjdf")
+ }
+  this.getOptions_bot_fun(option, this.currentNode());
+}
+file_upload(){
+  console.log("file upload called")
+}
 
-  onAnswer(choice: string) {
+
+getOptions_bot_fun(option,node) {
+  this.pushUser(option);
+this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option, recordID: node.recordID }).subscribe((res)=>{
+  console.log("res", res)
+  this.FLOW.update(value => [...value, res])
+   this.pushBot(this.currentPrompt(), res);
+})
+}
+  onAnswer(choice: string, key: string, msg: any) {
+    console.log("msg", msg)
+
     if (this.finished()) return;
     this.pushUser(choice);
 
@@ -83,33 +138,43 @@ export class DashboardComponent {
       this.finished.set(true);
       return;
     }
+    console.log("node", node)
+    if (node['is_api_call'] === 1) {
+      this.isAPICall = true
+    }
+  
+   
+
+
+
+
+  }
+ 
+
+
+
 
   
-    this._shared_service.getOptions_bot({  key: "solution_design", optionSelected: choice, recordID: node.recordID }).subscribe({
-      next: (nextNode: FlowNode) => {
-       
-        this.FLOW.set([nextNode]);
-        this.step.set(0); // always 0 index
-        this.pushBot(this.currentPrompt());
-      },
-      error: (err) => {
-        console.error('Error loading next flow:', err);
-        this.pushBot('Oops, something went wrong while processing your choice.');
-      }
-    });
-  }
+
+
+
+
+
 
   reset() {
     this.messages.set([]);
     this.step.set(0);
     this.finished.set(false);
     if (this.FLOW().length > 0) {
-      this.pushBot(this.currentPrompt());
+      this.pushBot(this.currentPrompt(),'');
     }
   }
 
-  private async pushBot(fullText: string) {
-    this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ts: Date.now() }]);
+
+  private async pushBot(fullText: any, options:any ) {
+    console.log("fullText", fullText)
+    this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ...fullText }]);
+    // console.log("kkkkkk", this.messages())
     const index = this.messages().length - 1;
 
     const typingDuration = 1000;
@@ -134,8 +199,8 @@ export class DashboardComponent {
       return updated;
     });
 
-    for (let i = 0; i < fullText.length; i++) {
-      const current = fullText.slice(0, i + 1);
+    for (let i = 0; i < fullText?.display_message.length; i++) {
+      const current = fullText.display_message.slice(0, i + 1);
       this.messages.update((m) => {
         const updated = [...m];
         updated[index] = { ...updated[index], text: current };
@@ -143,121 +208,143 @@ export class DashboardComponent {
       });
       await new Promise((res) => setTimeout(res, typingSpeed));
     }
+    console.log('messages', this.messages());
   }
 
   private pushUser(text: string) {
-    this.messages.update((m) => [...m, { from: 'user', text, ts: Date.now() }]);
+    this.messages.update((m) => [...m, { from: 'user', text, ts: Date.now(), options: [], key: '', upload_file: 0, file_view: 0 }]);
   }
 
-  // upload
-  public isDownload = false;
-  public isLoading = false;
-  public isDragOver = false;
-  public uploadedFiles: UploadedFile[] = [];
 
-  /** Drag events */
+
+  // start
+  /** Handle file drop */
+  onFileDropped(event: DragEvent): void {
+    event.preventDefault();
+    const items = event.dataTransfer?.files;
+    if (items) this.handleFiles(items);
+  }
+
+  /** Handle file browse selection */
+  onFileBrowse(event: any): void {
+    const items = event.target.files;
+    if (items) this.handleFiles(items);
+  }
+
+  /** Common handler for file validation */
+  handleFiles(fileList: FileList): void {
+    const validFiles: File[] = [];
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+        validFiles.push(file);
+        this.readExcel(file);
+      } else {
+        alert(`❌ Invalid file type: ${file.name} (only .xls/.xlsx allowed)`);
+      }
+    }
+
+    this.files = [...this.files, ...validFiles];
+  }
+
+  /** Read Excel and log content (optional) */
+  readExcel(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheet = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheet];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      console.log(`📘 ${file.name} content:`, jsonData);
+      this.excelData.push({ name: file.name, data: jsonData });
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  /** Upload all files to API */
+  uploadAll(): void {
+  if (this.files.length === 0) {
+    alert('Please select at least one Excel file.');
+    return;
+  }
+
+  // Make sure currentNode() and options exist
+  // const node = this.currentNode();
+  // if (!node || !node.options || !Array.isArray(node.options)) {
+  //   alert('Invalid node or missing options.');
+  //   return;
+  // }
+
+  // Loop through all selected files
+  this.files.forEach((file, index) => {
+    // Dynamically take file_type from node.options[index]
+    const fileOption = this.currentNode().options[index];
+    const file_type = fileOption?.file_type || 'EXCEL'; // fallback if missing
+
+    console.log(`Uploading file: ${file.name}, file_type: ${file_type}`);
+
+    this._shared_service
+  .uploadfile({
+    file,
+    file_type,
+    recordID: this.currentNode().recordID,
+  })
+  .subscribe({
+    next: (res) => {
+      console.log(`✅ ${file.name} uploaded successfully`, res);
+
+      if (res.message === 'FAILED') {
+        // alert(`❌ ${file.name} upload failed: ${res.reason}`);
+
+        // ❌ Remove failed file from array
+        this.files = this.files.filter(f => f.name !== file.name);
+      } else {
+        // ✅ Remove successfully uploaded file from array
+        // this.files = this.files.filter(f => f.name !== file.name);
+      }
+
+      // Optionally trigger next bot step or refresh state
+      // this._shared_service.getOptions_bot({ key: 'files_uploaded', optionSelected: 'files_uploaded', recordID: this.currentNode().recordID })
+      //   .subscribe((res) => {
+      //     console.log("res", res);
+      //     this.FLOW.update(value => [...value, res]);
+      //     this.pushBot(this.currentPrompt(), res);
+      //   });
+    },
+    error: (err) => {
+      console.error(`❌ Error uploading ${file.name}`, err);
+      alert(`Error uploading ${file.name}`);
+
+      // ⚠️ Remove errored file as well
+      this.files = this.files.filter(f => f.name !== file.name);
+    },
+  });
+  });
+}
+
+
+  /** Prevent default drag behavior */
   onDragOver(event: DragEvent): void {
     event.preventDefault();
-    this.isDragOver = true;
+  }
+  viewfiles(file){
+    console.log("file",file)
+  }
+  drop(event: CdkDragDrop<File[]>) {
+    moveItemInArray(this.files, event.previousIndex, event.currentIndex);
   }
 
-  onDragLeave(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOver = false;
+  /** Delete a file from list */
+  deleteFile(index: number): void {
+    const removed = this.files[index];
+    this.files.splice(index, 1);
+    this.excelData = this.excelData.filter(f => f.name !== removed.name);
   }
 
-  onFileDrop(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOver = false;
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.handleFiles(files);
-    }
-  }
+   /** Re-upload a specific file */
 
-  /** File selection */
-  onFileSelect(event: any): void {
-    const files = event.target.files;
-    this.handleFiles(files);
-  }
 
-  /** Handle multiple Excel files */
-  private handleFiles(fileList: FileList): void {
-    const excelFiles: UploadedFile[] = Array.from(fileList).filter(file =>
-      file.name.endsWith('.xlsx') || file.name.endsWith('.xls')
-    );
-
-    if (excelFiles.length === 0) {
-      alert('Only Excel files are allowed!');
-      return;
-    }
-
-    excelFiles.forEach(file => {
-      file.status = 'processing';
-      file.progress = 0;
-      this.uploadedFiles.push(file);
-    });
-
-    this.processFiles(excelFiles);
-  }
-
-  /** Process all uploaded Excel files */
-  private processFiles(files: UploadedFile[]): void {
-    this.isLoading = true;
-    const allData: any = {};
-    let processedCount = 0;
-
-    files.forEach(file => {
-      const reader = new FileReader();
-
-      reader.onprogress = (e: ProgressEvent<FileReader>) => {
-        if (e.lengthComputable) {
-          const progress = Math.round((e.loaded / e.total) * 100);
-          file.progress = progress;
-        }
-      };
-
-      reader.onload = (e: any) => {
-        try {
-          const wb: XLSX.WorkBook = XLSX.read(e.target.result, { type: 'binary' });
-          const jsonData = wb.SheetNames.reduce((acc, sheetName) => {
-            const sheet = wb.Sheets[sheetName];
-            acc[sheetName] = XLSX.utils.sheet_to_json(sheet);
-            return acc;
-          }, {});
-          allData[file.name] = jsonData;
-          file.status = 'done';
-          file.progress = 100;
-        } catch (err) {
-          file.status = 'error';
-        }
-
-        processedCount++;
-        if (processedCount === files.length) {
-          this.isLoading = false;
-          const dataString = JSON.stringify(allData, null, 2);
-          // document.getElementById('output')!.innerText = dataString.slice(0, 400) + '...';
-          this.jsonDownload(dataString);
-        }
-      };
-
-      reader.readAsBinaryString(file);
-    });
-  }
-
-  /** Remove file from the list */
-  removeFile(index: number): void {
-    this.uploadedFiles.splice(index, 1);
-  }
-
-  /** JSON Download link */
-  private jsonDownload(data: any): void {
-    this.isDownload = true;
-    setTimeout(() => {
-      const el = document.querySelector('#download2') as HTMLAnchorElement;
-      el.setAttribute('href', `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
-      el.setAttribute('download', 'excel_to_json.json');
-    }, 500);
-  }
-  // upload end
+  // end
 }

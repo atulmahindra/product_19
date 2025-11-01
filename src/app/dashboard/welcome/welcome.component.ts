@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MyDialogContentComponent } from '../../shared/my-dialog-content/my-dialog-content.component';
 import { SharedService } from '../../shared/shared.service';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-welcome',
@@ -11,9 +12,10 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './welcome.component.scss'
 })
 export class WelcomeComponent {
+  userobject
 greeting: string = '';
-userobject
-  constructor(private dialog: MatDialog,private _shared_serviec:SharedService) {
+
+  constructor(private dialog: MatDialog,private _shared_serviec:SharedService,private _authService: AuthService) {
     this.setGreeting();
   }
 
@@ -28,7 +30,7 @@ userobject
     }
   }
   ngOnInit(): void {
-    this.userobject = this._shared_serviec.getUser('loggedin user data');
+    this.userobject = this._authService.getUser('loggedin user data');
     console.log("userslocal",this.userobject);
   }
   openDialog(): void {

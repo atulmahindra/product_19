@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SharedService } from '../shared.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-backend-header',
@@ -8,11 +8,12 @@ import { SharedService } from '../shared.service';
   styleUrl: './backend-header.component.scss'
 })
 export class BackendHeaderComponent {
-  userobject
-constructor(private _shared_serviec:SharedService) {}
+userobject
+  constructor(private _authService: AuthService){
 
+  }
   ngOnInit(): void {
-this.userobject = this._shared_serviec.getUser('loggedin user data');
+    this.userobject = this._authService.getUser('loggedin user data');
     console.log("userslocal",this.userobject);
   }
 }
