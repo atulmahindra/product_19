@@ -171,6 +171,10 @@ export class DashboardComponent {
     this.isDragOver = false;
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
+      if ((this.uploadedFiles.length + files.length) > 6) {
+        alert('You can only upload up to 6 Excel files.');
+        return;
+      }
       this.handleFiles(files);
     }
   }
@@ -178,6 +182,10 @@ export class DashboardComponent {
   /** File selection */
   onFileSelect(event: any): void {
     const files = event.target.files;
+    if ((this.uploadedFiles.length + files.length) > 6) {
+      alert('You can only upload up to 6 Excel files.');
+      return;
+    }
     this.handleFiles(files);
   }
 
@@ -189,6 +197,12 @@ export class DashboardComponent {
 
     if (excelFiles.length === 0) {
       alert('Only Excel files are allowed!');
+      return;
+    }
+
+    // Restrict total uploaded files to 6
+    if ((this.uploadedFiles.length + excelFiles.length) > 6) {
+      alert('You can only upload up to 6 Excel files.');
       return;
     }
 
@@ -236,8 +250,12 @@ export class DashboardComponent {
         if (processedCount === files.length) {
           this.isLoading = false;
           const dataString = JSON.stringify(allData, null, 2);
-          // document.getElementById('output')!.innerText = dataString.slice(0, 400) + '...';
-          this.jsonDownload(dataString);
+          // Show JSON preview in output div
+          const outputDiv = document.getElementById('output');
+          if (outputDiv) {
+            outputDiv.innerText = dataString.slice(0, 400) + (dataString.length > 400 ? '...' : '');
+          }
+          // this.jsonDownload(dataString);
         }
       };
 
@@ -251,13 +269,6 @@ export class DashboardComponent {
   }
 
   /** JSON Download link */
-  private jsonDownload(data: any): void {
-    this.isDownload = true;
-    setTimeout(() => {
-      const el = document.querySelector('#download2') as HTMLAnchorElement;
-      el.setAttribute('href', `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
-      el.setAttribute('download', 'excel_to_json.json');
-    }, 500);
-  }
+ 
   // upload end
 }
