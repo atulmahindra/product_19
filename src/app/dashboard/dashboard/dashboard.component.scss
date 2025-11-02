@@ -207,7 +207,7 @@ $color-failed: #ff4b4b;
 }
 
 button:disabled {
-  background-color: #807f7f !important;
+  // background-color: #807f7f !important;
   border: 2px #807f7f !important;
   color: #ffff;
 }
@@ -520,7 +520,7 @@ margin-right: 7px;
 
 .file-upload {
   background-color: #232323;
-    max-width: 922px;
+    max-width: 800px;
     padding: 20px;
     border-radius: 20px;
     margin-top: 14px;
@@ -533,8 +533,8 @@ margin-right: 7px;
   padding: 12px 20px;
   margin-bottom: 10px;
   color: #fff;
-  width: 360px;
-  font-family: 'Poppins', sans-serif;
+  width: 350px;
+  // font-family: 'Poppins', sans-serif;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
@@ -747,7 +747,7 @@ action-btn {
 /* Blue text and icon for Download */
 .blue-download {
   color: #1976d2 !important; /* Material blue */
-  font-size: 0.75rem;
+  font-size: 0.72rem;
 }
 .file-actions_vew { 
   display: flex;
@@ -755,4 +755,40 @@ action-btn {
 }
 .file-item_wrap{
   display: flex;flex-direction: row;
+}
+
+.upload-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #007bff, #0056d2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 91, 187, 0.3);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.upload-btn:hover {
+  background: linear-gradient(135deg, #0056d2, #0041a8);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 91, 187, 0.4);
+}
+
+.upload-btn:disabled {
+  background: #b0b0b0;
+  color: #eee;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.upload-btn:active {
+  transform: scale(0.98);
 }

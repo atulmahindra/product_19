@@ -125,12 +125,21 @@ export class DashboardComponent {
     const node = this.currentNode();
     return node.end ? node.end : (node ?? '');
   }
-handleOptionSelect(option: any) {
-  console.log("option", option);
-  console.log("currentNode", this.currentNode());
- if(this.currentNode().upload_file === 1){
-  alert("jkjdf")
- }
+handleOptionSelect(option: any, msgIndex: number, optIndex: number) {
+  // disable options for this message so previous options can't be clicked again
+  this.messages.update((m) => {
+    const updated = [...m];
+    if (updated[msgIndex]) {
+      updated[msgIndex] = { ...updated[msgIndex], optionsDisabled: true };
+    }
+    return updated;
+  });
+
+  console.log('option', option);
+  console.log('currentNode', this.currentNode());
+  if (this.currentNode().upload_file === 1) {
+    alert('jkjdf');
+  }
   this.getOptions_bot_fun(option, this.currentNode());
 }
 file_upload(){
@@ -141,9 +150,12 @@ file_upload(){
 getOptions_bot_fun(option,node) {
   this.pushUser(option);
 this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option, recordID: node.recordID }).subscribe((res)=>{
-  console.log("res", res)
+ if(res){
+   console.log("res", res)
   this.FLOW.update(value => [...value, res])
    this.pushBot(this.currentPrompt(), res);
+   console.log("messages after bot", this.messages())
+ }
 })
 }
   onAnswer(choice: string, key: string, msg: any) {
@@ -197,8 +209,8 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
     // console.log("kkkkkk", this.messages())
     const index = this.messages().length - 1;
 
-    const typingDuration = 1000;
-    const dotInterval = 300;
+    const typingDuration = 10;
+    const dotInterval = 10;
     let elapsed = 0;
 
     while (elapsed < typingDuration) {
@@ -266,15 +278,26 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
 
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
-      if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-        validFiles.push(file);
-        // this.readExcel(file);
-      } else {
-        // alert(`❌ Invalid file type: ${file.name} (only .xls/.xlsx allowed)`);
+      if (!(file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+        // skip invalid types
+        continue;
       }
+
+      // Prevent adding duplicates by file name
+      const alreadyExists = this.files.some(f => f.name === file.name) || validFiles.some(f => f.name === file.name);
+      if (alreadyExists) {
+        // Notify the user and skip duplicate
+        alert(`File "${file.name}" is already added. Duplicate files are not allowed.`);
+        continue;
+      }
+
+      validFiles.push(file);
+      // this.readExcel(file);
     }
 
-    this.files = [...this.files, ...validFiles];
+    if (validFiles.length > 0) {
+      this.files = [...this.files, ...validFiles];
+    }
     // Fix ExpressionChangedAfterItHasBeenCheckedError by updating scroll after change
     setTimeout(() => {
       const scrollMe = document.querySelector('.chat-container') as HTMLElement;
@@ -305,8 +328,19 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
       return;
     }
 
-    // Reset status for all files
-    this.files.forEach(file => {
+    // Only upload files that are not yet successful
+    const filesToUpload = this.files.filter(file => {
+      const status = this.fileStatus[file.name]?.status;
+      return status !== 'success' && status !== 'uploading';
+    });
+
+    if (filesToUpload.length === 0) {
+      alert('All files are already uploaded successfully!');
+      return;
+    }
+
+    // Set status to pending for files to be uploaded
+    filesToUpload.forEach(file => {
       this.fileStatus[file.name] = { status: 'pending' };
     });
 
@@ -314,8 +348,9 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
     const uploadedFiles = [];
 
     // Upload files sequentially
-    for (let index = 0; index < this.files.length; index++) {
-      const file = this.files[index];
+    for (let i = 0; i < filesToUpload.length; i++) {
+      const file = filesToUpload[i];
+      const index = this.files.findIndex(f => f.name === file.name);
       const fileOption = this.currentNode().options[index];
       const file_type = fileOption?.file_type || 'EXCEL';
 
@@ -337,24 +372,24 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
             reason: res.reason 
           };
           allSuccess = false;
-          // alert(`❌ ${file.name} upload failed: ${res.reason}`);
         } else {
           this.fileStatus[file.name] = { status: 'success' };
           uploadedFiles.push(file.name);
         }
       } catch (err: any) {
         console.error(`❌ Error uploading ${file.name}`, err);
-        this.fileStatus[file.name] = { 
+        this.fileStatus[file.name] = {
           status: 'failed',
-          reason: err.message 
+          reason: err && err.message ? err.message : 'Unknown error'
         };
         allSuccess = false;
-        alert(`Error uploading ${file.name}: ${err.message}`);
+        alert(`Error uploading ${file.name}: ${err && err.message ? err.message : 'Unknown error'}`);
       }
     }
 
-    // Show final status
-    if (allSuccess) {
+    // Check if all files are now successful
+    const allNowSuccess = this.files.every(f => this.fileStatus[f.name]?.status === 'success');
+    if (allNowSuccess) {
       alert('✅ All files uploaded successfully!');
       this.allFilesUploaded = true;
       // Trigger next bot step
@@ -367,65 +402,65 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
         this.pushBot(this.currentPrompt(), res);
       });
     } else {
-      const successCount = uploadedFiles.length;
+      const successCount = this.files.filter(f => this.fileStatus[f.name]?.status === 'success').length;
       const failedCount = this.files.length - successCount;
-      // alert(`${successCount} files uploaded successfully, ${failedCount} files failed. Check the red marked files and try re-uploading them.`);
+      // Optionally alert or update UI
     }
   }
 
   /** Re-upload a specific failed file */
-  async reuploadFile(index: number): Promise<void> {
-    const file = this.files[index];
-    if (!file) return;
+  // async reuploadFile(index: number): Promise<void> {
+  //   const file = this.files[index];
+  //   if (!file) return;
 
-    const fileOption = this.currentNode().options[index];
-    const file_type = fileOption?.file_type || 'EXCEL';
+  //   const fileOption = this.currentNode().options[index];
+  //   const file_type = fileOption?.file_type || 'EXCEL';
 
-    this.fileStatus[file.name].status = 'uploading';
+  //   this.fileStatus[file.name].status = 'uploading';
 
-    try {
-      const res = await this._shared_service
-        .uploadfile({
-          file,
-          file_type,
-          recordID: this.currentNode().recordID,
-        })
-        .toPromise();
+  //   try {
+  //     const res = await this._shared_service
+  //       .uploadfile({
+  //         file,
+  //         file_type,
+  //         recordID: this.currentNode().recordID,
+  //       })
+  //       .toPromise();
 
-      if (res.message === 'FAILED') {
-        this.fileStatus[file.name] = { 
-          status: 'failed',
-          reason: res.reason 
-        };
-        alert(`❌ Re-upload failed: ${res.reason}`);
-      } else {
-        this.fileStatus[file.name] = { status: 'success' };
-        alert('✅ File re-uploaded successfully!');
-        // Check if all files are now successful
-        const allSuccess = this.files.every(f => this.fileStatus[f.name]?.status === 'success');
-        if (allSuccess) {
-          alert('✅ All files uploaded successfully!');
-          this.allFilesUploaded = true;
-          // Trigger next bot step
-          this._shared_service.getOptions_bot({ 
-            key: 'files_uploaded', 
-            optionSelected: 'files_uploaded', 
-            recordID: this.currentNode().recordID 
-          }).subscribe((res) => {
-            this.FLOW.update(value => [...value, res]);
-            this.pushBot(this.currentPrompt(), res);
-          });
-        }
-      }
-    } catch (err: any) {
-      console.error(`❌ Error re-uploading file`, err);
-      this.fileStatus[file.name] = { 
-        status: 'failed',
-        reason: err.message 
-      };
-      alert(`Error re-uploading file: ${err.message}`);
-    }
-  }
+  //     if (res.message === 'FAILED') {
+  //       this.fileStatus[file.name] = { 
+  //         status: 'failed',
+  //         reason: res.reason 
+  //       };
+  //       alert(`❌ Re-upload failed: ${res.reason}`);
+  //     } else {
+  //       this.fileStatus[file.name] = { status: 'success' };
+  //       alert('✅ File re-uploaded successfully!');
+  //       // Check if all files are now successful
+  //       const allSuccess = this.files.every(f => this.fileStatus[f.name]?.status === 'success');
+  //       if (allSuccess) {
+  //         alert('✅ All files uploaded successfully!');
+  //         this.allFilesUploaded = true;
+  //         // Trigger next bot step
+  //         this._shared_service.getOptions_bot({ 
+  //           key: 'files_uploaded', 
+  //           optionSelected: 'files_uploaded', 
+  //           recordID: this.currentNode().recordID 
+  //         }).subscribe((res) => {
+  //           this.FLOW.update(value => [...value, res]);
+  //           this.pushBot(this.currentPrompt(), res);
+  //         });
+  //       }
+  //     }
+  //   } catch (err: any) {
+  //     console.error(`❌ Error re-uploading file`, err);
+  //     this.fileStatus[file.name] = { 
+  //       status: 'failed',
+  //       reason: err.message 
+  //     };
+  //     alert(`Error re-uploading file: ${err.message}`);
+  //   }
+  // }
 
   /** Trigger replace file dialog for specific file index */
   openReplace(index: number): void {
@@ -448,6 +483,16 @@ this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option
     }
     const idx = this.replaceIndex;
     if (idx === null || idx === undefined) return;
+    // Prevent replacing with a file name that already exists in another slot
+    const existingIndex = this.files.findIndex((f, i) => f.name === file.name && i !== idx);
+    if (existingIndex !== -1) {
+      alert(`Cannot replace: a file named "${file.name}" already exists at position ${existingIndex + 1}.`);
+      // reset input
+      input.value = '';
+      this.replaceIndex = null;
+      return;
+    }
+
     this.handleReplaceFile(file, idx);
     this.replaceIndex = null;
     // reset input

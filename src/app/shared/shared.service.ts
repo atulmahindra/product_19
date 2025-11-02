@@ -21,8 +21,9 @@ export class SharedService {
     // if(err.error.message = 'Token was not recognised'){
     //   return throwError(() => new Error(err.error.message));
     // }
-    console.log(err.error.message);
-    return throwError(() => this.opensnacbar(this.errorMsgs[err.error.message]));
+    console.log(err.error.detail.message);
+    console.log("eroor",err)
+    return throwError(() => this.opensnacbar(this.errorMsgs[err.error.detail.message]));
 
     // this.display_err = this.errors[err.error.error.message];
   }
@@ -42,6 +43,7 @@ export class SharedService {
   }
   errorMsgs: any = {
     UNKNOWN: 'PLEASE CHECK INTERNET',
+    ERROR: 'ERROR',
     EMAIL_EXISTS: 'EMAIL EXISTS',
     OTP_UNVERIFIED: 'PLEASE ENTER VALID OTP',
     NOT_ACTIVATED: 'NOT ACTIVATED',
