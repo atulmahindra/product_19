@@ -16,8 +16,8 @@
         </ng-container>
         <ng-template #normalText>{{ msg.text }}</ng-template>
        
-<ng-container *ngIf="msg.upload_file === 0">
-<div [ngClass]="{ 'Options_list': msg.upload_file === 0 }">
+<ng-container *ngIf="msg.input_type === 'options'">
+<div [ngClass]="{ 'Options_list': msg.input_type === 'options' }">
           <div *ngFor="let option of msg.options; let j = index" class="option"
             [class.disabled]="msg.optionsDisabled"
             (click)="!msg.optionsDisabled && handleOptionSelect(option, i, j)"
@@ -27,7 +27,7 @@
           </div>
           </div>
 </ng-container>
-<ng-container *ngIf="msg.upload_file === 1">
+<ng-container *ngIf="msg.input_type === 'file_upload'">
 <div class="file-upload">
   <div style="display: flex
 ;

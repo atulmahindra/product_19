@@ -84,7 +84,7 @@ export class SharedService {
     // const queryString = new URLSearchParams(data.project_name as any).toString();
     const queryString = new URLSearchParams(data.project_name).toString().replace(/\+/g, '%20');
 
-    return this.http.get<any>(this.API_URL + `v1/analysis/getOptions?${queryString}`)
+    return this.http.post<any>(this.API_URL + `v1/analysis/createProject`,data)
       .pipe(
         catchError(err => {
           console.log(err)
@@ -95,7 +95,7 @@ export class SharedService {
   }
   getOptions_bot(data) {
     console.log(data)
-    return this.http.post<any>(this.API_URL + `v1/analysis/getOptions`, data)
+    return this.http.post<any>(this.API_URL + `v1/chatBot/aiChatBot`, data)
       .pipe(
         catchError(err => {
           console.log(err)

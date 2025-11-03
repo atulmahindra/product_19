@@ -149,7 +149,7 @@ file_upload(){
 
 getOptions_bot_fun(option,node) {
   this.pushUser(option);
-this._shared_service.getOptions_bot({ key: node.recordID, optionSelected: option, recordID: node.recordID }).subscribe((res)=>{
+this._shared_service.getOptions_bot({ key: node.recordID, user_selection: option, recordID: node.recordID }).subscribe((res)=>{
  if(res){
    console.log("res", res)
   this.FLOW.update(value => [...value, res])
