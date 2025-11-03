@@ -163,7 +163,8 @@ if(res.confirmation_message ===1){
   this.preload_bot = false
    console.log("res", res)
   this.FLOW.update(value => [...value, res])
-   this.pushBot(this.currentPrompt(), res);
+  // Push the full response object so the message contains response URLs and other metadata
+  this.pushBot(res);
    console.log("messages after bot", this.messages())
  }
 })
@@ -213,9 +214,11 @@ if(res.confirmation_message ===1){
   }
 
 
-  private async pushBot(fullText: any, options:any ) {
-    console.log("fullText", fullText)
-    this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ...fullText }]);
+  private async pushBot(fullText: any, options?: any) {
+    console.log('fullText', fullText)
+    // Normalize fullText: if it's a string, wrap it into an object with display_message
+    const payload = (typeof fullText === 'string' || fullText instanceof String) ? { display_message: fullText } : (fullText || {});
+    this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ...payload }]);
     // console.log("kkkkkk", this.messages())
     const index = this.messages().length - 1;
 
@@ -235,20 +238,30 @@ if(res.confirmation_message ===1){
     }
 
     const typingSpeed = 10;
+    const finalText = payload.display_message ?? payload.message ?? '';
     this.messages.update((m) => {
       const updated = [...m];
       updated[index] = { ...updated[index], text: '' };
       return updated;
     });
 
-    for (let i = 0; i < fullText?.display_message.length; i++) {
-      const current = fullText.display_message.slice(0, i + 1);
+    for (let i = 0; i < (finalText?.length || 0); i++) {
+      const current = finalText.slice(0, i + 1);
       this.messages.update((m) => {
         const updated = [...m];
         updated[index] = { ...updated[index], text: current };
         return updated;
       });
       await new Promise((res) => setTimeout(res, typingSpeed));
+    }
+
+    // If there was no typing animation (empty finalText), ensure message shows the content
+    if (!finalText) {
+      this.messages.update((m) => {
+        const updated = [...m];
+        updated[index] = { ...updated[index], text: finalText };
+        return updated;
+      });
     }
     console.log('messages', this.messages());
   }
@@ -409,7 +422,7 @@ if(res.confirmation_message ===1){
         recordID: this.currentNode().recordID 
       }).subscribe((res) => {
         this.FLOW.update(value => [...value, res]);
-        this.pushBot(this.currentPrompt(), res);
+        this.pushBot(res);
       });
     } else {
       const successCount = this.files.filter(f => this.fileStatus[f.name]?.status === 'success').length;
