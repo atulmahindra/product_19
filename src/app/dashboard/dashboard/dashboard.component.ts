@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SharedService } from '../../shared/shared.service';
 import { Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import * as XLSX from 'xlsx';
 
@@ -70,7 +71,7 @@ export class DashboardComponent {
   files: File[] = [];
   excelData: any[] = [];
   fileStatus: { [key: string]: { status: 'pending' | 'uploading' | 'success' | 'failed', reason?: string } } = {};
-
+ safeHtml: SafeHtml = '';
   // Track the order and state of file uploads
   uploadOrder: string[] = [];
   uploadInProgress = false;
@@ -78,6 +79,7 @@ export class DashboardComponent {
   allFilesUploaded: boolean = false;
   node = { recordID: '68f1eb62f530a91e52ce5f47' }; 
   // file uploadend
+  preload_bot: boolean = false;
   file_vew: boolean = false;
   file_response: any;
   donwload_files: any;
@@ -93,7 +95,7 @@ export class DashboardComponent {
   currentNode = computed(() => this.FLOW()[this.FLOW().length - 1] || {});
   fileUpload = signal<FileUpload[]>([])
 
-  constructor(private router: Router, private _shared_service: SharedService) { }
+  constructor(private router: Router, private _shared_service: SharedService,private sanitizer: DomSanitizer) { }
   projectname
   fileuploaded: boolean = false;
   ngOnInit(): void {
@@ -149,8 +151,16 @@ file_upload(){
 
 getOptions_bot_fun(option,node) {
   this.pushUser(option);
+  this.preload_bot = true
 this._shared_service.getOptions_bot({ key: node.recordID, user_selection: option, recordID: node.recordID }).subscribe((res)=>{
  if(res){
+if(res.confirmation_message ===1){
+  // alert("jfdk")
+  this.safeHtml = this.sanitizer.bypassSecurityTrustHtml(res.response.confirmation_message)
+  console.log("safeHtml", this.safeHtml)
+}
+  
+  this.preload_bot = false
    console.log("res", res)
   this.FLOW.update(value => [...value, res])
    this.pushBot(this.currentPrompt(), res);

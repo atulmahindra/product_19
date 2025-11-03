@@ -80,6 +80,8 @@ $color-failed: #ff4b4b;
 .message {
   display: flex;
   align-items: flex-start;
+  flex-direction: column;
+  position: relative;
 }
 
 .message.bot .bubble {
@@ -166,7 +168,7 @@ $color-failed: #ff4b4b;
 .dot {
   width: 6px;
   height: 6px;
-  background-color: #555;
+  background-color: #fff;
   border-radius: 50%;
   animation: blink 1.2s infinite;
 }
@@ -791,4 +793,30 @@ action-btn {
 
 .upload-btn:active {
   transform: scale(0.98);
+}
+
+
+// start
+.summery_view {
+  height:550px;
+  overflow:scroll;
+
+}
+
+// end
+.down_wrap{
+  display: flex;
+    margin-top: 10px;
+  .down_load_file{
+  
+  a{
+     color: white;
+    text-decoration: none;
+    margin-right: 10px;
+    background-color: #363636;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 4px;
+  }
+}
 }
