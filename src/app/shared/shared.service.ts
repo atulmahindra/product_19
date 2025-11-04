@@ -128,6 +128,33 @@ export class SharedService {
         })
       )
   }
+    getMenus(email: string, id: string) {
+    const data = {
+      email: email,
+      id: id
+    }
+    return this.http.post<any>(this.API_URL + `v1/analysis/getProjectsList`, data)
+      .pipe(
+        catchError(err => {
+          console.log(err)
+          return this.err_hand(err);
+
+        })
+      )
+  }
+  logOutUser(session_id: string) {
+    const params = new URLSearchParams({
+      session_id: session_id
+    })
+    return this.http.get<any>(this.API_URL + `/v1/api/auth/logout?${params.toString()}`)
+      .pipe(
+        catchError(err => {
+          console.log(err)
+          return this.err_hand(err);
+
+        })
+      )
+  }
   checkAnalysisStatus(data) {
     console.log(data)
     // data["recordID"] = "6901afb64c873f3f9939de93"

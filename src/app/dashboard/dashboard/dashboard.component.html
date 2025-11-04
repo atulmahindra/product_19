@@ -3,21 +3,14 @@
     <p> {{projectname}}</p>
   </div>
   <div class="chat-container" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-    <!-- <div class="message bot" >
-<div  *ngIf="preload_bot" style="position: absolute;">
-        <div class="bubble">
-         <div class="typing-indicator">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-          </div>
-        </div>
-      </div> -->
+
     <div *ngFor="let msg of messages(); let i = index; trackBy: trackByMsg;"
       [ngClass]="{ 'bot': msg.from === 'bot', 'user': msg.from === 'user' }" class="message">
       
       <div class="bubble">
+        <ng-container *ngIf="msg.confirmation_message === 1">
+<div [innerHTML]="safeHtml" class="summery_view"></div>
+</ng-container>
         <ng-container *ngIf="msg.text.startsWith('typing'); else normalText">
           <div class="typing-indicator">
             <span class="dot"></span>
@@ -27,9 +20,7 @@
         </ng-container>
         <ng-template #normalText>{{ msg.text  }}</ng-template>
        
-<ng-container *ngIf="msg.confirmation_message === 1">
-<div [innerHTML]="safeHtml" class="summery_view"></div>
-</ng-container>
+
 <ng-container *ngIf="msg.input_type === 'options'">
 <div [ngClass]="{ 'Options_list': msg.input_type === 'options' }">
           <div *ngFor="let option of msg.options; let j = index" class="option"
@@ -205,8 +196,19 @@
         
       </div>
     </div>
+     <div class="message bot" >
+<div  *ngIf="preload_bot" style="position: absolute;">
+        <div class="bubble">
+         <div class="typing-indicator">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          </div>
+        </div>
+      </div>
   </div>
-  <!-- <div class="search" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px">
+  <div class="search" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px" *ngIf="input_view">
     <div class="glob" fxLayout="column">
       <img src="../../../assets/images/Frame 54.png" />
     </div>
@@ -223,5 +225,5 @@
     <div fxLayout="column" class="send_btn" (click)="sendUserMessage()">
       <img src="../../../assets/images/Group.png" />
     </div>
-  </div> -->
+  </div>
 </div>

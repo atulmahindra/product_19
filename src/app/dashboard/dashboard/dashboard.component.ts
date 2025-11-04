@@ -91,6 +91,8 @@ export class DashboardComponent {
   step = signal<number>(0);
   finished = signal<boolean>(false);
 
+  input_view: boolean = false;
+
   FLOW = signal<any>([{ options: [], option_type: "", upload_file: 0, file_view: 0, display_message: "Great choise, VS! Let's start building a fresh solution. Please provide me with the project details(scope, requirements, and objectives), and I will help you design the best-fit solution.", recordID: "" }]); // ✅ store API result here
   currentNode = computed(() => this.FLOW()[this.FLOW().length - 1] || {});
   fileUpload = signal<FileUpload[]>([])
@@ -139,9 +141,7 @@ handleOptionSelect(option: any, msgIndex: number, optIndex: number) {
 
   console.log('option', option);
   console.log('currentNode', this.currentNode());
-  if (this.currentNode().upload_file === 1) {
-    alert('jkjdf');
-  }
+ 
   this.getOptions_bot_fun(option, this.currentNode());
 }
 file_upload(){
@@ -153,19 +153,23 @@ getOptions_bot_fun(option,node) {
   this.pushUser(option);
   this.preload_bot = true
 this._shared_service.getOptions_bot({ key: node.recordID, user_selection: option, recordID: node.recordID }).subscribe((res)=>{
- if(res){
+ this.preload_bot = false
+  if(res){
 if(res.confirmation_message ===1){
   // alert("jfdk")
   this.safeHtml = this.sanitizer.bypassSecurityTrustHtml(res.response.confirmation_message)
   console.log("safeHtml", this.safeHtml)
 }
-  
-  this.preload_bot = false
-   console.log("res", res)
+ 
+    
+      console.log("res", res)
   this.FLOW.update(value => [...value, res])
   // Push the full response object so the message contains response URLs and other metadata
   this.pushBot(res);
    console.log("messages after bot", this.messages())
+
+  
+ 
  }
 })
 }
@@ -216,6 +220,14 @@ if(res.confirmation_message ===1){
 
   private async pushBot(fullText: any, options?: any) {
     console.log('fullText', fullText)
+     if (fullText.input_type === 'user_input') {
+    this.input_view = true
+  }
+  if(fullText.input_type === "options"){
+     this.input_view = false
+  }if(fullText.input_type ==='file_upload'){
+    this.fileuploaded = false
+  }
     // Normalize fullText: if it's a string, wrap it into an object with display_message
     const payload = (typeof fullText === 'string' || fullText instanceof String) ? { display_message: fullText } : (fullText || {});
     this.messages.update((m) => [...m, { from: 'bot', text: 'typing', ...payload }]);
@@ -569,4 +581,26 @@ if(res.confirmation_message ===1){
   }
 
   // end
+
+
+   sendUserMessage() {
+    const message = this.searchText.trim();
+  
+console.log("message", message);
+   this.pushUser(message);
+    this.searchText = '';
+this._shared_service.getOptions_bot({user_input:message, user_selection: '', recordID: this.currentNode().recordID }).subscribe((res)=>{
+  if(res){
+   
+  
+  
+   console.log("res", res)
+  this.FLOW.update(value => [...value, res])
+  // Push the full response object so the message contains response URLs and other metadata
+  this.pushBot(res);
+   console.log("messages after bot", this.messages())
+  }
+})
+    
+  }
 }

@@ -20,6 +20,7 @@ $color-failed: #ff4b4b;
     position: static;
     display: flex;
     top: 0;
+    padding-bottom: 15px;
     text-transform: uppercase;
 
     span {
@@ -82,6 +83,7 @@ $color-failed: #ff4b4b;
   align-items: flex-start;
   flex-direction: column;
   position: relative;
+  
 }
 
 .message.bot .bubble {
@@ -93,6 +95,11 @@ $color-failed: #ff4b4b;
   width: 80%;
   max-width: 80%;
   animation: fadeIn 0.3s ease-in;
+  padding-left: 49px;
+  background-image: url('../../../assets/images/glob.png');
+  background-repeat: no-repeat;
+  background-size: 40px;
+    background-position: 0px 0px;
 }
     .drop-zone {
       border: 2px dashed #1e90ff;

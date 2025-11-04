@@ -7,6 +7,7 @@ import { FooterComponent } from './footer/footer.component';
 import { BackendHeaderComponent } from './backend-header/backend-header.component';
 import { BackendFooterComponent } from './backend-footer/backend-footer.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
+import { SidebarComponent } from './../sidebar-component/sidebar-component.component';
 import { SharedService } from './shared.service';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import {MatCardModule} from '@angular/material/card';
@@ -29,7 +30,8 @@ import { MatInputModule } from '@angular/material/input';
     FooterComponent,
     BackendHeaderComponent,
     BackendFooterComponent,
-    SideNavComponent
+    SideNavComponent,
+    SidebarComponent
   ],
   exports: [
     HeaderComponent,
@@ -39,7 +41,8 @@ import { MatInputModule } from '@angular/material/input';
     BackendFooterComponent,
     MatCardModule,
     MatFormFieldModule,
-    SideNavComponent
+    SideNavComponent,
+    SidebarComponent
   ],
   imports: [
     CommonModule,

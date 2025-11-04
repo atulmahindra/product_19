@@ -1,0 +1,67 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+    <!-- Header -->
+    <header class="sidebar-header">
+        <!-- <button class="sidebar-toggler" (click)="toggleSidebar()">
+            <span class="material-symbols-rounded">chevron_left</span>
+        </button> -->
+        <span href="#" class="header-logo" (click)="toggleSidebar()">
+            <img src="../../assets/images/glob.png" alt="Logo" />
+        </span>
+    </header>
+
+    <nav class="sidebar-nav">
+        <!-- Primary Menu -->
+        <ul class="nav-list primary-nav overflowX">
+            <ng-container *ngFor="let item of primaryMenu">
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="item.link">
+                        <img [src]="'../../assets/images/' + item.icon" />
+                        <!-- <span class="material-symbols-rounded">{{ item.icon }}</span> -->
+                        <span class="nav-label">{{ item.project_name }}</span>
+                    </a>
+                </li>
+            </ng-container>
+
+
+            <ng-container *ngIf="!isCollapsed">
+                <ng-container *ngFor="let item of menuItems()">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="item.link">
+                            <span class="material-symbols-rounded">{{ item.icon }}</span>
+                            <span class="nav-label">{{ item.project_name }}</span>
+                        </a>
+                    </li>
+                </ng-container>
+            </ng-container>
+        </ul>
+
+        <!-- Secondary Menu -->
+        <ul class="nav-list secondary-nav">
+            <li *ngFor="let item of secondaryMenu" class="nav-item">
+                <a class="nav-link" (click)="onMenuClick(item)">
+                    <span class="material-symbols-rounded">{{ item.icon }}</span>
+                    <span class="nav-label">{{ item.label }}</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<!-- Dropdown -->
+<!-- <li class="nav-item dropdown-container" [class.open]="openDropdown === item.label" [attr.data-key]="item.label">
+
+    <a href="#" class="nav-link dropdown-toggle" (click)="toggleDropdown(item.label, $event)">
+        <span class="material-symbols-rounded">{{ item.icon }}</span>
+        <span class="nav-label">{{ item.label }}</span>
+        <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+    </a>
+
+    <ul class="dropdown-menu"
+        [style.min-height]="openDropdown === item.label ? dropdownHeights[item.label] + 'px' : '0'">
+        <li *ngFor="let sub of item.children" class="nav-item">
+            <a class="nav-link dropdown-link" [routerLink]="sub.link">{{ sub.label }}</a>
+        </li>
+    </ul>
+</li> -->
+
+<!-- Simple Menu Item -->

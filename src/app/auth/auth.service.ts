@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { User } from './app-user/user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 export class AuthService {
   private API_URL= environment.API_URL;
   user = new BehaviorSubject<User | null>(null);
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private cookieService: CookieService) { }
 
    getUser(key: string): any {
     try {
@@ -31,6 +32,7 @@ export class AuthService {
   ).pipe(
     tap((res: any) => {
       console.log('✅ SSO Validation Success:', res);
+      this.cookieService.set("session_id", res.session_id)
       
       this.authenticatedUser(
         res.id,
