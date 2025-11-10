@@ -1,0 +1,29 @@
+.main-content {
+  width: 100%;
+   transition: width 0.3s ease;
+  //  background-image: url(../../../assets/images/Globe_GIF.gif);
+  //  background-repeat: no-repeat;
+}
+
+.fixed-header {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+ 
+}
+
+.fixed-footer {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+
+}
+
+.content-area {
+  flex: 1 1 auto;
+  overflow-y: auto; /* Scroll only inside this area */
+  padding: 1rem; /* Optional */
+ 
+}

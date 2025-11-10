@@ -1,0 +1,11 @@
+[
+  { "file_type": "INBOUND", "path": "assets/uploads/inbound.xlsx" },
+  { "file_type": "OUTBOUND", "path": "assets/uploads/outbound.xlsx" },
+  { "file_type": "CONSTRAINS", "path": "assets/uploads/constraints-config.xlsx" },
+  { "file_type": "INVENTORY", "path": "assets/uploads/inventory.xlsx" },
+  { "file_type": "PRODUCTIVITY_MASTER", "path": "assets/uploads/Productivity_Master (1).xlsx" },
+  { "file_type": "EQUIPMENT_CAPEX_MASTER", "path": "assets/uploads/EQUIPMENT_CAPEX_MASTER.xlsx" },
+  { "file_type": "FACILITY_MISC_MASTER", "path": "assets/uploads/FACILITY_MISC_MASTER.xlsx" },
+  { "file_type": "MANPOWER_COST_MASTER", "path": "assets/uploads/MANPOWER_COST_MASTER.xlsx" },
+  { "file_type": "SKU_MASTER", "path": "assets/uploads/sku_master.xlsx" }
+]

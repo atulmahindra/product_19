@@ -1,0 +1,228 @@
+<div class="char-wrap">
+  <div class="new_project_cont"><span>New Project >&nbsp; </span>
+    <p> {{projectname}}</p>
+  </div>
+  <div class="chat-container" id="style-1" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+
+    <div *ngFor="let msg of messages(); let i = index; trackBy: trackByMsg;"
+      [ngClass]="{ 'bot': msg.from === 'bot', 'user': msg.from === 'user' }" class="message">
+
+      <div class="bubble">
+        <ng-container *ngIf="msg.confirmation_message === 1">
+          <div [innerHTML]="msg.response.confirmation_message" id="style-1" class="summery_view"></div>
+        </ng-container>
+        <ng-container *ngIf="msg.text.startsWith('typing'); else normalText">
+          <div class="typing-indicator">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </ng-container>
+        <ng-template #normalText>{{ msg.text }}</ng-template>
+
+
+        <ng-container *ngIf="msg.input_type === 'options'">
+          <div [ngClass]="{ 'Options_list': msg.input_type === 'options' }">
+            <div *ngFor="let option of msg.options; let j = index" class="option" [class.disabled]="msg.optionsDisabled"
+              (click)="!msg.optionsDisabled && handleOptionSelect(option, i, j)"
+              [attr.aria-disabled]="msg.optionsDisabled">
+              {{ option }}
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="msg.input_type === 'file_upload'">
+          <div class="file-upload">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <div fxLayout="column" class="lef_up_con">
+                <h4>Upload Files</h4>
+                <p>Please do upload the file in a given sequence.</p>
+              </div>
+              <div class="dow_temp" fxLayout="column" (click)="download_all_temp()">
+                <div >Download All Template</div>
+              </div>
+            </div>
+             <div class="drop-zone" >
+              <!-- <p>📂 Drag & Drop Excel files here</p>
+            <p>or</p> -->
+              <button (click)="fileInput.click()" [disabled]="allFilesUploaded">
+                <img src="../../assets/images/upload.png" alt="Upload Icon" />
+                <div class="drag_drop_cn">Drag & Drop file here or <span>Browse</span> </div>
+              </button>
+              <input #fileInput type="file" multiple accept=".xls,.xlsx" (change)="onFileBrowse($event)"
+                [disabled]="allFilesUploaded" hidden />
+              <!-- Hidden input used to replace a specific file -->
+              <input id="replaceInput" type="file" accept=".xls,.xlsx" (change)="onReplaceSelected($event)" hidden />
+            </div>
+            <div class="list_o_u_f" *ngIf="files.length > 0">List of uploaded files</div>
+            <div style="
+    max-height: 377px;
+    overflow: auto;">
+              <!-- <div class="file-list" style="display: flex
+;margin-right: 10px;
+    flex-direction: column;
+  ">
+                <div style="padding-bottom: 19px;
+
+    z-index: 2;
+    background-color: #232323;">Listed File</div>
+                <div class="file-ul">
+                  <div *ngFor="let item of msg.options; let j = index" class="file-item_wrap" (click)="file_upload()">
+                    <div class="file-info" style="height: 24px;
+    display: flex;
+    width: 210px;
+    align-items: center;">
+                      <span class="file-name"> {{ item.display_text }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              
+              <div class="file-list" style="display: flex
+;
+    flex-direction: column;
+   " *ngIf="files.length > 0">
+                
+
+                <div   class="file-ul">
+                  <div *ngFor="let file of files; let i = index"  class="file-item_wrap"
+                    (cdkDragStarted)="isDragging = true" (cdkDragEnded)="isDragging = false"
+                    [ngClass]="{'failed': fileStatus[file.name]?.status === 'failed'}">
+<div class="file-actions_vew">
+                      <ng-container *ngIf="fileStatus[file.name]?.status !== 'success'; else downloadBtn">
+                        <!-- Replace Button -->
+                        <button mat-button class="action-btn white-icon" (click)="openReplace(i)">
+                          <mat-icon>sync</mat-icon>
+                          Replace
+                        </button>
+
+                        <!-- Re-upload Button (only on failure) -->
+                        <!-- <button
+    mat-button
+    class="action-btn white-icon"
+    *ngIf="fileStatus[file.name]?.status !== 'success' && fileStatus[file.name]?.status !== 'uploading'"
+    (click)="reuploadFile(i)"
+  >
+    <mat-icon>refresh</mat-icon>
+    Re-upload
+  </button> -->
+                      </ng-container>
+
+                      <ng-template #downloadBtn>
+                        <button mat-button class="action-btn blue-download" (click)="downloadExcel(i)">
+                          <mat-icon>download</mat-icon>
+                          Download Excel
+                        </button>
+                      </ng-template>
+
+
+                    </div>
+                    <div class="file-info" [ngClass]="{
+    'uploading': fileStatus[file.name]?.status === 'uploading',
+    'success': fileStatus[file.name]?.status === 'success',
+    'failed': fileStatus[file.name]?.status === 'failed'
+  }">
+                      <span class="file-name">{{ file.name }}</span>
+
+                      <div class="status-indicator">
+                        <ng-container *ngIf="fileStatus[file.name]?.status === 'uploading'">
+                          <span>Uploading...</span>
+                          <div class="progress-bar" ></div>
+                        </ng-container>
+
+                        <ng-container *ngIf="fileStatus[file.name]?.status === 'success'">
+                          <!-- <div class="progress-bar" ></div> -->
+                          <span class="status">Uploaded</span>
+                        </ng-container>
+
+                        <ng-container *ngIf="fileStatus[file.name]?.status === 'failed'">
+                          <!-- <div class="progress-bar" ></div> -->
+                          <span class="status">Failed </span>
+                        </ng-container>
+                      </div>
+
+                      <!-- <div *ngIf="fileStatus[file.name]?.reason" class="error-message">
+    {{ fileStatus[file.name].reason }}
+  </div> -->
+                    </div>
+                    
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+
+
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15">
+            <ng-container>
+              <button class="upload-btn-Cancel"
+                (click)="cancelUpload()"
+                [disabled]="isUploading || files.length === 0 || allFilesUploaded">
+                Cancel
+              </button>
+            </ng-container>
+            <ng-container *ngIf="!allFilesUploaded; else submitBlock">
+              <button (click)="uploadAll()" class="upload-btn"
+                [disabled]="allFilesUploaded || files.length !== msg.options?.length || isUploading">
+                {{ isUploading ? 'Uploading...' : 'Upload All' }}
+              </button>
+            </ng-container>
+
+
+            <ng-template #submitBlock>
+              <button class="upload-btn" (click)="submitFiles()" [disabled]="disabledSubmit">
+                Submit
+              </button>
+            </ng-template>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="msg.is_file === 1">
+          <div class="down_wrap">
+            <div *ngIf="msg.response.excel_url" class="down_load_file">
+              <a href="{{msg.response.excel_url}}" target="_self">Downlod Excel {{msg.response.current_version}}</a>
+            </div>
+            <div *ngIf="msg.response.pdf_url" class="down_load_file">
+              <a href="{{msg.response.pdf_url}}" target="_self">Downlod PDF {{msg.response.current_version}}</a>
+            </div>
+            <div *ngIf="msg.response.word_url" class="down_load_file">
+              <a href="{{msg.response.word_url}}" target="_self">Downlod Word {{msg.response.current_version}}</a>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+    <div class="message bot">
+      <div *ngIf="preload_bot" style="position: absolute;">
+        <div class="bubble">
+          <div class="typing-indicator">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="search" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0px" *ngIf="input_view">
+    <div class="glob" fxLayout="column">
+      <img src="../../../assets/images/glob.png" />
+    </div>
+
+    <div fxFlex appearance="fill">
+      <div class="custom-input">
+        <mat-form-field appearance="fill">
+          <mat-label>Type here....</mat-label>
+          <input matInput placeholder="Type here...." [(ngModel)]="searchText" (keydown.enter)="sendUserMessage()" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="column" class="send_btn" (click)="sendUserMessage()">
+      <img src="../../../assets/images/Group.png" />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,301 @@
+$pie-color: #dc58a2;
+$bg-gray: #ECEEF4;
+
+$red: red;
+$green: #60C254;
+$blue: #7bb5ec;
+$orange: #FFB802;
+$yellow: #FFFF03;
+$dark-yellow: #f8DA00;
+
+$pie-size: 80px;
+$donut-size: 15px;
+$text-size: 20px;
+
+$font-Georama-bold:"Georama-bold";
+$font-Georama-bold-s:'Georama-bold-s';
+$font-Georama:'Georama';
+$font-Georama-t:'Georama-Thin';
+$font-Georama-l:'Georama-Light';
+@mixin translateX($x) {
+  -webkit-transform: translateX($x);
+      -ms-transform: translateX($x); // IE9 only
+       -o-transform: translateX($x);
+          transform: translateX($x);
+}
+
+@mixin rotate($degrees) {
+  -webkit-transform: rotate($degrees);
+     -moz-transform: rotate($degrees);
+      -ms-transform: rotate($degrees); // IE9 only
+       -o-transform: rotate($degrees);
+          transform: rotate($degrees);
+}
+
+@mixin position-center() {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+}
+
+@mixin horizontal-gradient( $start-color, $end-color) {
+	
+	background-image: $start-color; /* Old browsers */
+	background-image: -moz-linear-gradient(left, $start-color 0%, $start-color 50%, $end-color 50%, $end-color 100%); /* FF3.6-15 */
+	background-image: -webkit-linear-gradient(left, $start-color 0%,$start-color 50%,$end-color 50%,$end-color 100%); /* Chrome10-25,Safari5.1-6 */
+	background-image: linear-gradient(to right, $start-color 0%,$start-color 50%,$end-color 50%,$end-color 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$start-color', endColorstr='$end-color',GradientType=1 ); /* IE6-9 */
+}
+
+/*@mixin s*/
+@mixin heightwidth($size: 29px, $size1: 20px) {
+  width: $size;
+  height: $size1;
+}
+@mixin padding($top, $right, $bottom, $left) {
+  padding-top: $top;
+  padding-right: $right;
+  padding-bottom: $bottom;
+  padding-left: $left;
+}
+
+@mixin border-radius-all($top-right,$top-left,$bot-right,$bot-left){
+  border-top-right-radius: $top-right;
+  border-top-left-radius: $top-left;
+  border-bottom-right-radius: $bot-right;
+  border-bottom-left-radius: $bot-left;
+}
+
+//Margin mixin
+@mixin margin($top, $right, $bottom, $left) {
+  margin-top: $top;
+  margin-right: $right;
+  margin-bottom: $bottom;
+  margin-left: $left;
+}
+
+//alingment mixin
+
+//border mixin
+@mixin border-all($width, $style, $color) {
+  border-width: $width;
+  border-style: $style;
+  border-color: $color;
+}
+//box-shadow mixin
+@mixin box-shadow($top, $left, $blur, $color, $inset: "") {
+  -webkit-box-shadow: $top $left $blur $color #{$inset};
+  -moz-box-shadow: $top $left $blur $color #{$inset};
+  box-shadow: $top $left $blur $color #{$inset};
+}
+//border-radius mixin
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  border-radius: $radius;
+}
+//box-shadow mixin
+@mixin box-shadow($x-axis: 0, $y-axis: 1px, $blur: 2px, $color: $default) {
+  box-shadow: $x-axis $y-axis $blur $color;
+}
+
+//flexbox mixin
+@mixin transform($transforms) {
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+@mixin displaydiv($displayview) {
+  display: $displayview;
+}
+
+@mixin text-align($text-align) {
+  text-align: $text-align;
+}
+
+//transition
+@mixin transition($transition...) {
+  -moz-transition: $transition;
+  -o-transition: $transition;
+  -webkit-transition: $transition;
+  transition: $transition;
+}
+
+//flexbox mixin
+@mixin flexbox {
+  display: -webkit-box; // old
+  display: -moz-box; // old
+  display: -ms-flexbox; // ie
+  display: -webkit-flex; // new
+  display: flex; // new
+}
+
+@mixin position(
+  $position,
+  $top: null,
+  $right: null,
+  $bottom: null,
+  $left: null
+) {
+  position: $position;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+
+
+
+@mixin font-weight($weight) {
+  $weights: (
+    thin: 100,
+    extra-light: 200,
+    ultra-light: 200,
+    light: 300,
+    normal: 400,
+    book: 400,
+    regular: 400,
+    medium: 500,
+    semi-bold: 600,
+    demi-bold: 600,
+    bold: 700,
+    extra-bold: 800,
+    ultra-bold: 900,
+    heavy: 900,
+    black: 900,
+    ultra: 900,
+    ultra-black: 900,
+    extra-ultra: 900,
+  );
+
+  $output: $weight;
+  @if map-has-key($weights, $weight) {
+    $output: map-get($weights, $weight);
+  }
+
+  font-weight: $output;
+}
+
+@mixin font-size($sizeValue: 0.75) {
+  font-size: $sizeValue + rem;
+}
+@mixin opacity($opacity:0.9){
+  opacity: $opacity;
+}
+
+@mixin smoothTrans {
+  -webkit-transition: all 0.3s ease-in-out;
+      -ms-transition: all 0.3s ease-in-out;
+          transition: all 0.3s ease-in-out;
+}
+/*@mixin e*/
+
+//start
+.creat_bt
+{
+  ::ng-deep .mat-flat-button
+  {
+    // background-color: #2258bf;
+  color:#fff;
+  text-transform: uppercase;
+  @include font-size(0.65) ;
+  @include font-weight(semi-bold);
+  // @include border-radius(20px);
+  @include padding(0px, 30px ,0px , 30px);
+  &.on_hold_bt
+  {
+    background-color: #fa6915;
+  }
+  &.rej_tran
+  {
+    background-color: transparent;
+    color: #2258bf;
+  }
+  &.login_bt_curved
+  {
+    border-radius: 4px;
+    @include font-size(0.80);
+    line-height: 2rem;
+  }
+  &.reset_poup{
+    background-color: transparent !important;
+    color: #000;
+  }
+  .mat-button-wrapper
+  {
+    display: inline-block;
+    .creat_bt_icon
+    {
+      @include heightwidth(14px,initial );
+      @include margin(initial, 10px,initial ,initial );
+    }
+  }
+  }
+}
+//end
+
+
+
+  $md-primary: (
+  50: #fff,
+  100: #f8f9fb,
+  200: #f8f9fa,
+  300: #f8f8fa,
+  400: #292d32,
+  500: #d5233b,
+  600: #394aae,
+  700: #3140a5,
+  800: #29379d,
+  900: #1b278d,
+  A100: #c6cbff,
+  A200: #939dff,
+  A400: #606eff,
+  A700: #e4e4e4,
+  contrast: (
+    50: #000000,
+    100: #415467,
+    200: #a0a9b3,
+    300: #f3f4f5,
+    400: #1c1b15,
+    500: #ffffff,
+    600: #494949,
+    700: #373F4D,
+    800: #ffffff,
+    900: #657785,
+    A100: #000000,
+    A200: #000000,
+    A400: #eaeaea,
+    A700: #ffffff
+  )
+);
+
+
+ .my-super-class{
+  width: 50px !important;
+  margin: 20px !important;
+  height: 50px !important;
+  border-radius: 30px !important;
+  text-align: center !important;
+  font-size: 1.4rem !important;
+  border: transparent !important;
+  &:focus{
+      outline: none !important;
+  }
+ }
+
+
+ input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}

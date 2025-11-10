@@ -1,0 +1,54 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.mat-toolbar {
+ background-color: var(--mat-sys-primary);
+  
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between icon and name */
+  font-weight: 500;
+}
+
+// start
+ .custom-input {
+::ng-deep .mat-form-field-appearance-fill{
+  width: 400px;
+  background-color: transparent;
+  .mat-mdc-text-field-wrapper{
+    background-color:transparent;
+    .mat-mdc-form-field-infix{
+      .mdc-floating-label{
+        color: white !important;
+      }
+    }
+    .mdc-line-ripple{
+      display: none;
+    }
+  .mat-mdc-form-field-focus-overlay{
+    background-color:transparent;
+  }
+ 
+  }
+  .mat-mdc-form-field-subscript-wrapper{
+  display: none !important; 
+ }
+}
+
+}
+
+// end
+

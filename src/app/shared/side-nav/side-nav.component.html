@@ -1,0 +1,58 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- Header -->
+  <header class="sidebar-header">
+    <!-- <a href="#" class="header-logo">
+      <img src="logo.png" alt="Logo" />
+    </a> -->
+    <button class="sidebar-toggler" (click)="toggleSidebar()">
+      <span class="material-symbols-rounded">chevron_left</span>
+    </button>
+  </header>
+
+  <nav class="sidebar-nav">
+    <!-- Primary Menu -->
+    <ul class="nav-list primary-nav">
+      <ng-container *ngFor="let item of menuItems">
+        <!-- Dropdown -->
+        <li class="nav-item dropdown-container" 
+            *ngIf="item.children; else simpleLink"
+            [class.open]="openDropdown === item.label"
+            [attr.data-key]="item.label">
+
+          <a href="#" class="nav-link dropdown-toggle" (click)="toggleDropdown(item.label, $event)">
+            <span class="material-symbols-rounded">{{ item.icon }}</span>
+            <span class="nav-label">{{ item.label }}</span>
+            <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+          </a>
+
+          <ul class="dropdown-menu"
+              [style.min-height]="openDropdown === item.label ? dropdownHeights[item.label] + 'px' : '0'">
+            <li *ngFor="let sub of item.children" class="nav-item">
+              <a class="nav-link dropdown-link" [routerLink]="sub.link">{{ sub.label }}</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Simple Menu Item -->
+        <ng-template #simpleLink>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="item.link">
+              <span class="material-symbols-rounded">{{ item.icon }}</span>
+              <span class="nav-label">{{ item.label }}</span>
+            </a>
+          </li>
+        </ng-template>
+      </ng-container>
+    </ul>
+
+    <!-- Secondary Menu -->
+    <ul class="nav-list secondary-nav">
+      <li *ngFor="let item of secondaryMenu" class="nav-item">
+        <a class="nav-link" [routerLink]="item.link">
+          <span class="material-symbols-rounded">{{ item.icon }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>

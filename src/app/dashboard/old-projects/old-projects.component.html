@@ -1,0 +1,13 @@
+<div class="char-wrap">
+     <div class="new_project_cont"><span>Old Project </span>
+    
+  </div> 
+  <div class="chat-container">
+  @for (item of old_project; track $index) {
+    <p routerLink="/backend/Dashboard/{{item._id}}">{{ item.project_name }}</p>
+  }
+  @empty {
+    <p>No old projects available.</p>
+  }
+</div>
+</div>

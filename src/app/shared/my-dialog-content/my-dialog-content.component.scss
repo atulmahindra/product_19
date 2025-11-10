@@ -1,0 +1,66 @@
+.custome_idalog{
+    position: relative;
+   background-color: #56565661;
+}
+.subm_bt {
+  background-color: #606060;
+  border-radius: 4px; /* as you mentioned earlier */
+  padding: 8px 20px;
+
+  ::ng-deep &.mat-mdc-button:not(:disabled) {
+    color: white;
+  }
+
+  &:hover {
+    background-color: #606060 !important; /* same background on hover */
+    color: white !important; /* ensure text color remains white */
+  }
+}
+
+
+// start
+ .custom-input {
+::ng-deep .mat-form-field-appearance-fill{
+  width: 400px;
+  background-color: transparent;
+  .mat-mdc-text-field-wrapper{
+    background-color:#4D4D4D66;
+    border: 1px solid #6E6E6E;
+    .mat-mdc-form-field-infix{
+      .mdc-floating-label{
+        color: white !important;
+      }
+    }
+    .mdc-line-ripple{
+      display: none;
+    }
+  .mat-mdc-form-field-focus-overlay{
+    background-color:transparent;
+  }
+ 
+  }
+  .mat-mdc-form-field-subscript-wrapper{
+  display: none !important; 
+ }
+}
+
+}
+
+// end
+::ng-deep .custom-dialog-container {
+  
+ .mat-mdc-dialog-container{
+    .mat-mdc-dialog-inner-container{
+        .mat-mdc-dialog-surface{
+ border-radius: 20px;
+        }
+       
+    }
+ }
+}
+
+/* Custom class for the backdrop blur effect */
+::ng-deep .custom-dialog-backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+}

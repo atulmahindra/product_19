@@ -1,0 +1,98 @@
+@use "@angular/material" as mat;
+
+@font-face {
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Georama';
+  src: url('./assets/font/Georama_SemiExpanded-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2') format('woff2');
+}
+// @use "./styles/_theme-colors.scss" as theme-colors;
+
+// html {
+//   @include mat.theme(
+//     (
+//       color: (
+//         theme-type: light,
+//         primary: theme-colors.$primary-palette,
+//         tertiary: theme-colors.$tertiary-palette,
+//       ),
+//       typography: Roboto,
+//       density: 0,
+//     )
+//   );
+// }
+/* Scrollbar Styling */
+// ::-webkit-scrollbar {
+//     width: 10px;
+// }
+ 
+// ::-webkit-scrollbar-track {
+//     background-color: #ebebeb;
+//     -webkit-border-radius: 10px;
+//     border-radius: 10px;
+// }
+
+// ::-webkit-scrollbar-thumb {
+//     -webkit-border-radius: 10px;
+//     border-radius: 10px;
+//     background: #6d6d6d; 
+// }
+html,
+body {
+  height: 100%;
+  
+}
+body {
+  margin: 0;
+  font-family: 'Georama', sans-serif ; 
+}
+body {
+  background-color: #D10013;
+  /* vertical gradient: top (#D10013) to bottom (#000000) */
+  background-image: linear-gradient(to bottom, #D10013 0%, #000000 100%);
+  /* keep it fixed so it doesn't move with content (optional) */
+  // background-attachment: fixed;
+  // background-repeat: no-repeat;
+  // background-size: cover;
+  // min-height: 100vh;
+  //  background-image: url('./assets/images/main_bg.svg');
+  // background-repeat: no-repeat;
+  // background-size: cover; /* or contain / specific size */
+  // background-position: center;
+}
+

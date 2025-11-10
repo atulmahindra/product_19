@@ -1,0 +1,23 @@
+<div fxLayout="row" fxFill>
+ 
+ <app-sidebar></app-sidebar> 
+
+
+  <main  fxLayout="column" class="main-content">
+
+  <header class="fixed-header">
+    <app-backend-header></app-backend-header>
+  </header>
+
+ 
+  <section class="content-area" fxFlex>
+    <router-outlet></router-outlet>
+  </section>
+
+
+  <!-- <footer class="fixed-footer">
+    <app-footer></app-footer>
+  </footer> -->
+</main>
+
+</div>
