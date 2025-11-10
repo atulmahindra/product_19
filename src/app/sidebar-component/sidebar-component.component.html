@@ -14,7 +14,7 @@
         <ul class="nav-list primary-nav overflowX">
             <ng-container *ngFor="let item of primaryMenu">
                 <li class="nav-item">
-                    <a class="nav-link" [routerLink]="item.link">
+                    <a class="nav-link" (click)="onMenuClickPrimary(item)">
                         <img [src]="'../../assets/images/' + item.icon" />
                         <!-- <span class="material-symbols-rounded">{{ item.icon }}</span> -->
                         <span class="nav-label">{{ item.project_name }}</span>
@@ -26,7 +26,7 @@
             <ng-container *ngIf="!isCollapsed">
                 <ng-container *ngFor="let item of menuItems()">
                     <li class="nav-item">
-                        <a class="nav-link" [routerLink]="item.link">
+                        <a class="nav-link" (click)="onMenuClickPrimary(item)">
                             <span class="material-symbols-rounded">{{ item.icon }}</span>
                             <span class="nav-label">{{ item.project_name }}</span>
                         </a>

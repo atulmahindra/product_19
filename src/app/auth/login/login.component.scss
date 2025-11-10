@@ -1,0 +1,44 @@
+// start
+.preload_trans{
+  position: fixed;width: 100%;height: 100%;top: 0px;left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  backdrop-filter:blur(15px) brightness(95%);
+  z-index: 99;
+  &.card_hide{
+    display: none;
+  }
+  .in_text_to_data{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    h1{
+    //   font-family: $font-Georama-bold;
+      font-size:  1.2rem;
+      // opacity: 0.5;
+      color: wheat;
+    }
+    p{
+      font-size:  0.75rem;
+      // opacity: 0.5;
+      color: wheat;
+    }
+  }
+  .data_non_api_inn{
+      max-width: 300px;
+      text-align: center;
+  }
+  img{
+      width: 150px;
+      // animation: rotate360 5s linear infinite;
+      // opacity: 0.6;
+  }
+//   div{
+//       @include font-size(0.85);
+//       @include font-weight(bold);
+//       @include padding(10px,0,10px,0);
+//   }
+}
+// end

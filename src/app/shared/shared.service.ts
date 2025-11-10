@@ -6,6 +6,8 @@ import { MyDialogContentComponent } from './my-dialog-content/my-dialog-content.
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, catchError, throwError } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +16,9 @@ export class SharedService {
 
   bot_obj = new BehaviorSubject<any>(null);
   project_name = new BehaviorSubject<any>(null);
-  constructor(private _snackBar: MatSnackBar, private dialog: MatDialog, private http: HttpClient) {
+
+  sidenav_menu = new BehaviorSubject<any>(null);
+  constructor(private _snackBar: MatSnackBar, private dialog: MatDialog, private http: HttpClient, private cookieService: CookieService) {
 
   }
   err_hand(err: HttpErrorResponse) {
@@ -22,7 +26,7 @@ export class SharedService {
     //   return throwError(() => new Error(err.error.message));
     // }
     console.log(err.error.detail.message);
-    console.log("eroor",err)
+    console.log("eroor", err)
     return throwError(() => this.opensnacbar(this.errorMsgs[err.error.detail.message]));
 
     // this.display_err = this.errors[err.error.error.message];
@@ -84,10 +88,11 @@ export class SharedService {
     // const queryString = new URLSearchParams(data.project_name as any).toString();
     const queryString = new URLSearchParams(data.project_name).toString().replace(/\+/g, '%20');
 
-    return this.http.post<any>(this.API_URL + `v1/analysis/createProject`,data)
+    return this.http.post<any>(this.API_URL + `v1/analysis/createProject`, data)
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
@@ -99,6 +104,7 @@ export class SharedService {
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
@@ -111,6 +117,7 @@ export class SharedService {
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
@@ -123,12 +130,13 @@ export class SharedService {
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
       )
   }
-    getMenus(email: string, id: string) {
+  getMenus(email: string, id: string) {
     const data = {
       email: email,
       id: id
@@ -137,6 +145,7 @@ export class SharedService {
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
@@ -146,10 +155,43 @@ export class SharedService {
     const params = new URLSearchParams({
       session_id: session_id
     })
-    return this.http.get<any>(this.API_URL + `/v1/api/auth/logout?${params.toString()}`)
+    return this.http.get<any>(this.API_URL + `v1/api/auth/logout?${params.toString()}`)
       .pipe(
         catchError(err => {
           console.log(err)
+          // this.errorHandler(err)
+          return this.err_hand(err);
+
+        })
+      )
+  }
+  downloadTemplates(){
+    return this.http.get<any>(this.API_URL + `v1/analysis/downloadTemplates`).pipe(
+        catchError(err => {
+          console.log(err)
+          // this.errorHandler(err)
+          return this.err_hand(err);
+
+        })
+      )
+  }
+  getProjectDetails(id: string) {
+    return this.http.post<any>(this.API_URL + `v1/analysis/getProjectDetails`, { recordID: id })
+      .pipe(
+        catchError(err => {
+          console.log(err)
+          this.errorHandler(err)
+          return this.err_hand(err);
+
+        })
+      )
+  }
+  downloadFileFromBlob(fileName: string) {
+    return this.http.post<any>(this.API_URL + `v1/analysis/getProjectDetails`, { fileName: fileName })
+      .pipe(
+        catchError(err => {
+          console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
@@ -162,6 +204,7 @@ export class SharedService {
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
 
         })
@@ -182,9 +225,17 @@ export class SharedService {
       .pipe(
         catchError(err => {
           console.log(err)
+          this.errorHandler(err)
           return this.err_hand(err);
         })
       )
   }
 
+  errorHandler(err): void {
+    if (err.status === 401) {
+      this.logOutUser(this.cookieService.get('session_id'))
+      window.location.href = "/"
+      console.log('401 Unauthorized error caught');
+    }
+  }
 }

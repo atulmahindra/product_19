@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { SharedService } from '../shared.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -28,12 +29,13 @@ export class MyDialogContentComponent {
     private _authService: AuthService,
     private _shared_service: SharedService,
     public dialogRef: MatDialogRef<MyDialogContentComponent>,
+    private cookieService: CookieService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
   userobject
   ngOnInit() {
     this.userobject = this._authService.getUser('loggedin user data');
-    console.log("userslocal",this.userobject);
+    console.log("userslocal", this.userobject);
     console.log(this.data)
     this.projectForm = this.fb.group({
       project_name: ['', Validators.required]
@@ -56,8 +58,8 @@ export class MyDialogContentComponent {
     if (this.projectForm.valid) {
       const payload = { project_name: this.projectForm.value };
 
-      // Example API call
-      this._shared_service.create_new_project({project_name:payload.project_name.project_name,email:this.userobject.email,session_id:this.userobject.id}).subscribe((res) => {
+      // Example API call 
+      this._shared_service.create_new_project({ project_name: payload.project_name.project_name, email: this.userobject.email, session_id: this.cookieService.get('session_id') }).subscribe((res) => {
         console.log(res)
         if (res) {
           this._shared_service.bot_obj.next(res)

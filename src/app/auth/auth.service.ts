@@ -56,6 +56,10 @@ export class AuthService {
         // Network or unexpected errors
         console.error('Unexpected Error:', err.message);
       }
+      if (err.status === 400) {
+        console.warn('Redirecting to environment URL due to 400 error...');
+        window.location.href = environment.ssoLogin; // <-- Make sure `environment.redirectUrl` exists
+      }
 
       // Optionally, show a friendly message or handle redirect
       // this.router.navigate(['/login']);
