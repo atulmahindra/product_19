@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit {
   menuItems = signal<MenuItem[]>([])
   primaryMenu: any[] = [
     { project_name: 'New Project', icon: 'New Project.svg', link: '/backend', _id: '' },
-    { project_name: 'Old Project', icon: 'Old Project.svg', link: '/backend', _id: '' }
+    { project_name: 'Old Project', icon: 'Old Project.svg', link: '/backend/OldProject', _id: '' }
   ];
   secondaryMenu: any[] = [
     // { label: 'Support', icon: 'help', link: '/support' },
@@ -91,7 +91,7 @@ export class SidebarComponent implements OnInit {
     this.loading = true;
     
     const userData = JSON.parse(localStorage.getItem('loggedin user data') || '{}');
-    this._shared_service.getMenus(userData?.email ?? "", id).subscribe({
+    this._shared_service.getMenus(userData?.email ?? "", '').subscribe({
       next: (menus: MenuItem[]) => {
         console.log("menus", menus);
         // If id is empty, reset the list instead of appending

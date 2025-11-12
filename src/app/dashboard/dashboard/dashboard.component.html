@@ -9,8 +9,38 @@
 
       <div class="bubble">
         <ng-container *ngIf="msg.confirmation_message === 1">
-          <div [innerHTML]="msg.response.confirmation_message" id="style-1" class="summery_view"></div>
+<div [innerHTML]="msg.response.confirmation_message" id="style-1" class="summery_view"></div>
+</ng-container>
+
+        <ng-container *ngIf="msg.is_file === 1">
+          <div class="wrapper">
+            <a *ngIf="msg.response.excel_url" href="{{msg.response.excel_url}}" target="_self" class="download-file">
+              <img src="../../../assets/images/excel.svg" />
+              <div class="download-excel">
+                <span class="download-text">Downlod Excel {{msg.response.current_version}}</span>
+                <span class="download-sub-text">Excel File &nbsp;&nbsp;39KB</span>
+              </div>
+              <img src="../../../assets/images/download.png" />
+            </a>
+            <a *ngIf="msg.response.pdf_url" href="{{msg.response.pdf_url}}" target="_self" class="download-file">
+              <img src="../../../assets/images/pdf.svg" />
+              <div class="download-excel">
+                <span class="download-text">Downlod PDF {{msg.response.current_version}}</span>
+                <span class="download-sub-text">PDF File &nbsp;&nbsp;39KB</span>
+              </div>
+              <img src="../../../assets/images/download.png" />
+            </a>
+            <a *ngIf="msg.response.word_url" href="{{msg.response.word_url}}" target="_self" class="download-file">
+              <img src="../../../assets/images/word.svg" />
+              <div class="download-excel">
+                <span class="download-text">Downlod Word {{msg.response.current_version}}</span>
+                <span class="download-sub-text">Word File &nbsp;&nbsp;39KB</span>
+              </div>
+              <img src="../../../assets/images/download.png" />
+            </a>
+          </div>
         </ng-container>
+
         <ng-container *ngIf="msg.text.startsWith('typing'); else normalText">
           <div class="typing-indicator">
             <span class="dot"></span>
@@ -35,7 +65,7 @@
             <div fxLayout="row" fxLayoutAlign="space-between center">
               <div fxLayout="column" class="lef_up_con">
                 <h4>Upload Files</h4>
-                <p>Please do upload the file in a given sequence.</p>
+                <p>Ensure the files are named exactly as in the template zip.</p>
               </div>
               <div class="dow_temp" fxLayout="column" (click)="download_all_temp()">
                 <div >Download All Template</div>
@@ -179,20 +209,20 @@
           </div>
         </ng-container>
 
-        <ng-container *ngIf="msg.is_file === 1">
-          <div class="down_wrap">
-            <div *ngIf="msg.response.excel_url" class="down_load_file">
-              <a href="{{msg.response.excel_url}}" target="_self">Downlod Excel {{msg.response.current_version}}</a>
-            </div>
-            <div *ngIf="msg.response.pdf_url" class="down_load_file">
-              <a href="{{msg.response.pdf_url}}" target="_self">Downlod PDF {{msg.response.current_version}}</a>
-            </div>
-            <div *ngIf="msg.response.word_url" class="down_load_file">
-              <a href="{{msg.response.word_url}}" target="_self">Downlod Word {{msg.response.current_version}}</a>
-            </div>
-          </div>
-        </ng-container>
-
+<!-- <ng-container *ngIf="msg.is_file === 1">
+  <div class="down_wrap">
+<div *ngIf="msg.response.excel_url" class="down_load_file">
+<a href="{{msg.response.excel_url}}" target="_self">Downlod Excel {{msg.response.current_version}}</a> 
+</div>
+<div *ngIf="msg.response.pdf_url" class="down_load_file">
+<a href="{{msg.response.pdf_url}}" target="_self">Downlod PDF {{msg.response.current_version}}</a> 
+</div>
+<div *ngIf="msg.response.word_url" class="down_load_file">
+<a href="{{msg.response.word_url}}" target="_self">Downlod Word {{msg.response.current_version}}</a> 
+</div>
+</div>
+</ng-container> -->
+        
       </div>
     </div>
     <div class="message bot">
@@ -216,7 +246,7 @@
       <div class="custom-input">
         <mat-form-field appearance="fill">
           <mat-label>Type here....</mat-label>
-          <input matInput placeholder="Type here...." [(ngModel)]="searchText" (keydown.enter)="sendUserMessage()" />
+          <input matInput placeholder="" [(ngModel)]="searchText" (keydown.enter)="sendUserMessage()" />
         </mat-form-field>
       </div>
     </div>

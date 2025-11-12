@@ -836,6 +836,42 @@ ease;
   overflow:auto;
   margin-bottom: 28px;
 }
+.download-file {
+  background-color: #363636;
+  border-radius: 13px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 16px;
+  padding-block: 8px;
+  cursor: pointer;
+  color: #F6F6F6;
+  text-decoration: none;
+}
+
+.download-excel {
+  display: grid;
+  justify-content: center;
+  justify-items: stretch;
+}
+
+.download-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.download-sub-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #949494;
+}
+
+.wrapper {
+  display: flex;
+  margin-block: 20px;
+  gap: 17px;
+}
 
 // end
 .down_wrap{

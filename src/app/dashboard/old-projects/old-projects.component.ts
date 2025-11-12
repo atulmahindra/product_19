@@ -16,7 +16,7 @@ old_project
   }
 ngOnInit(): void {
 this.userobject = this._authService.getUser('loggedin user data');
-this._shared_service.getMenus(this.userobject?.email ?? "", this.userobject.id).subscribe((res)=>{
+this._shared_service.getMenus(this.userobject?.email ?? "", '').subscribe((res)=>{
 console.log("sdfa",res)
 this.old_project = res
 })
